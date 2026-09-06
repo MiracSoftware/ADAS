@@ -1,3 +1,10 @@
+/* Dashboard CSS Dosyası */
+/* Bu CSS dosyası, ADAŞ uygulamasının dashboard sayfası için özel olarak tasarlanmıştır. 
+   Dashboard sayfasında kullanılan kartlar, butonlar ve diğer UI bileşenlerinin stilini yönetir. 
+   Ayrıca, kullanıcıların puan durumlarını görsel olarak ayırt edebilmeleri için olumlu ve olumsuz davranışları temsil eden renk paletlerini içerir. 
+   Bu sayede kullanıcı deneyimi daha sezgisel ve görsel olarak çekici hale gelir. */
+   /*Adas/assets/css/dashboard.css*/
+
 /* Puan Durum Renkleri (Web Arayüzü İçin Dinamik Yapı) */
 .puan-sifir {
   color: #f59e0b !important;

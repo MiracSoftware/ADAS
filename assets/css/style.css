@@ -1,114 +1,165 @@
 /* ==========================================================================
-   ADAŞ GLOBAL TEMA VE PERFORMANS MOTORU
+   ADAŞ - iOS 26 ULTRA GLASS & MOTION DESIGN SYSTEM
    ========================================================================== */
 
-/* 1. KARANLIK MOD DEĞİŞKENLERİ (Varsayılan - Derin Gece) */
 :root,
 [data-theme="dark"] {
-  --bg-main: radial-gradient(circle at 50% 50%, #282851 0%, #149573 100%);
-  --card-bg: rgba(35, 112, 114, 0.65);
-  --input-bg: #000010;
-  --text-main: #f3f4f6; /* Göz almayan soft beyaz */
-  --text-muted: #9ca3af;
-  --border-color: rgba(251, 245, 245, 0.298);
-  --blur-value: blur(16px);
+  --bg-gradient: radial-gradient(circle at 50% 0%, #1c263b 0%, #0b0f19 100%);
+  --glass-card: rgba(255, 255, 255, 0.05);
+  --glass-input: rgba(0, 0, 0, 0.35);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-glow: rgba(0, 122, 255, 0.15);
+  --text-main: #ffffff;
+  --text-muted: rgba(255, 255, 255, 0.6);
+  --accent-orange: #ff9f0a;
+  --accent-emerald: #30d158;
+  --accent-blue: #007aff;
+  --blur-power: blur(30px) saturate(210%);
+  --radius-ios: 28px;
+  --spring-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --smooth-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --bubble-bg: rgba(25, 25, 30, 0.92);
 }
 
-/* 2. AYDINLIK MOD DEĞİŞKENLERİ (Premium Konforlu Tonlar) */
 [data-theme="light"] {
-  --bg-main: radial-gradient(circle at 50% 50%, #5757b0 0%, #149573 100%);
- --card-bg: rgba(38, 141, 145, 0.65);
-  --input-bg: #abeefa71;
-  --text-main: #112d4e; /* Derin konforlu lacivert/siyah */
-  --text-muted: #044c56;
-  --border-color: rgba(53, 97, 147, 0.932);
-  --blur-value: blur(2px);
+  --bg-gradient: radial-gradient(circle at 50% 0%, #f1f5f9 0%, #e2e8f0 100%);
+  --glass-card: rgba(255, 255, 255, 0.75);
+  --glass-input: rgba(255, 255, 255, 0.9);
+  --glass-border: rgba(0, 0, 0, 0.12);
+  --glass-glow: rgba(0, 122, 255, 0.1);
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --accent-orange: #ea580c;
+  --accent-emerald: #059669;
+  --accent-blue: #0284c7;
+  --blur-power: blur(20px) saturate(180%);
+  --bubble-bg: rgba(255, 255, 255, 0.95);
 }
 
-/* 3. KÜRESEL UYGULAMA */
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
 body {
-  background: var(--bg-main) !important;
+  background: var(--bg-gradient) !important;
   color: var(--text-main) !important;
   font-family:
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
-    sans-serif;
-  -webkit-tap-highlight-color: transparent;
+    -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+    system-ui, sans-serif !important;
+  min-height: 100vh;
+  overflow-x: hidden;
   transition:
-    background 0.3s ease,
-    color 0.3s ease;
+    background 0.4s var(--smooth-out),
+    color 0.4s var(--smooth-out);
 }
 
-.login-card,
-.bg-\[\#3a3a3a\],
-.bg-\[\#2b2b2b\] {
-  background-color: var(--card-bg) !important;
-  backdrop-filter: var(--blur-value) !important;
-  -webkit-backdrop-filter: var(--blur-value) !important;
-  border: 1px solid var(--border-color) !important;
+.login-card {
+  background: var(--glass-card) !important;
+  backdrop-filter: var(--blur-power) !important;
+  -webkit-backdrop-filter: var(--blur-power) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: var(--radius-ios) !important;
+  box-shadow:
+    0 30px 60px -12px rgba(0, 0, 0, 0.3),
+    0 0 20px var(--glass-glow) !important;
+}
+
+.label-text,
+.sub-title-text,
+.loading-text {
+  color: var(--text-muted) !important;
+}
+
+.custom-select-trigger,
+input {
+  background: var(--glass-input) !important;
   color: var(--text-main) !important;
+  border: 1px solid var(--glass-border) !important;
+  backdrop-filter: blur(10px);
+  border-radius: 18px !important;
+  transition: all 0.25s var(--smooth-out) !important;
 }
 
-.form-input,
-select,
-input,
-.captcha-box {
-  background-color: var(--input-bg) !important;
-  color: var(--text-main) !important;
-  border: 1px solid var(--border-color) !important;
+.custom-select-trigger:focus,
+input:focus {
+  border-color: var(--accent-orange) !important;
+  box-shadow: 0 0 0 4px rgba(255, 159, 10, 0.2) !important;
 }
 
-/* KÜRESEL ETKİLEŞİM ANİMASYONLARI (Varsayılan Durum) */
-button,
-.btn-davranis,
-select,
-input[type="submit"],
-.theme-toggle {
+#txtPassword {
+  border-radius: 20px !important;
+  letter-spacing: 0.35em !important;
+}
+
+/* iOS Bubble Dropdown */
+.ios-bubble-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  z-index: 999;
+  background: var(--bubble-bg);
+  backdrop-filter: var(--blur-power);
+  -webkit-backdrop-filter: var(--blur-power);
+  border: 1px solid var(--glass-border);
+  border-radius: 22px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: scale(0.85) translateY(-10px);
+  transform-origin: top center;
   transition:
-    transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-    background-color 0.2s ease,
-    box-shadow 0.2s ease,
-    opacity 0.2s ease !important;
+    opacity 0.25s ease,
+    transform 0.3s var(--spring-bounce),
+    visibility 0.25s;
 }
 
-button:hover,
-input[type="submit"]:hover {
-  filter: brightness(0.9);
+.ios-bubble-menu.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: scale(1) translateY(0);
+}
+
+.ios-bubble-item {
+  padding: 14px 18px;
+  border-radius: 16px;
+  color: var(--text-main);
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition:
+    background-color 0.15s ease,
+    transform 0.2s var(--spring-bounce);
   cursor: pointer;
 }
 
-button:active,
-.btn-davranis:active,
-input[type="submit"]:active {
-  transform: scale(0.9) !important;
+.ios-bubble-item.active-hover,
+.ios-bubble-item:hover {
+  background-color: var(--accent-blue) !important;
+  color: #ffffff !important;
+  transform: scale(1.02);
 }
 
-/* ==========================================================================
-   ⚡ 4. PERFORMANS MODU BARİKATI (AKTİFKEN ÇALIŞACAK)
-   ========================================================================== */
+.ios-bubble-item.active-hover .check-icon,
+.ios-bubble-item:hover .check-icon {
+  opacity: 1 !important;
+}
+
+.performans-modu,
 .performans-modu * {
-  /* Tüm animasyonları ve geçiş sürelerini anında katlet */
   transition: none !important;
   animation: none !important;
-  /* Ağır GPU grafik render yüklerini (blur ve gölge) sıfırla */
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
   box-shadow: none !important;
-  text-shadow: none !important;
-}
-
-/* Performans modunda buton yaylanmasını engelle */
-.performans-modu button:active,
-.performans-modu .btn-davranis:active,
-.performans-modu input[type="submit"]:active {
-  transform: none !important;
-}
-
-/* Modallar için performans modunda blur yerine düz koyu arka plan */
-.performans-modu .modal-backdrop {
-  backdrop-filter: none !important;
-  background-color: rgba(0, 0, 0, 0.9) !important;
 }

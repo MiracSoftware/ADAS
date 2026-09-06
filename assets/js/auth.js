@@ -1,5 +1,5 @@
-// ADAS/assets/js/auth.js
-import { dbGet, auth, signInWithEmailAndPassword } from "./firebase-config.js";
+import { dbGet } from "./firebase-config.js";
+import { EngineToastGoster, fillBubbleMenu } from "./theme-engine.js";
 
 const loadingArea = document.getElementById("loadingArea");
 const loginForm = document.getElementById("loginForm");
@@ -17,79 +17,82 @@ function CaptchaUret() {
   const sayi1 = Math.floor(Math.random() * 9) + 1;
   const sayi2 = Math.floor(Math.random() * 9) + 1;
   mevcutCaptchaCevabi = sayi1 + sayi2;
-  lblCaptchaSoru.textContent = `${sayi1} + ${sayi2} =`;
-  txtCaptchaCevap.value = "";
-}
-
-function HataGoster(mesaj, tur = "hata") {
-  const container = document.getElementById("toastContainer");
-  if (!container) return;
-
-  const toast = document.createElement("div");
-  const rgbaBg = tur === "hata" ? "bg-rose-600 border-rose-700" : "bg-amber-500 border-amber-600";
-
-  toast.className = `${rgbaBg} border text-white px-5 py-3 rounded-lg shadow-2xl flex items-center justify-between min-w-[320px] transform translate-x-full transition-all duration-300 pointer-events-auto`;
-  toast.innerHTML = `
-    <div class="flex items-center gap-2">
-      <span class="text-sm font-medium">${mesaj}</span>
-    </div>
-    <button type="button" class="text-white opacity-70 hover:opacity-100 font-bold ml-4 text-xs">X</button>
-  `;
-
-  toast.querySelector("button").addEventListener("click", () => toast.remove());
-  container.appendChild(toast);
-
-  setTimeout(() => toast.classList.remove("translate-x-full"), 10);
-  setTimeout(() => {
-    if (toast) {
-      toast.classList.add("translate-x-full");
-      setTimeout(() => toast.remove(), 300);
-    }
-  }, 5000);
+  if (lblCaptchaSoru) lblCaptchaSoru.textContent = `${sayi1} + ${sayi2} =`;
+  if (txtCaptchaCevap) txtCaptchaCevap.value = "";
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    // Anonim / Temel Yetkilendirme
-    await signInWithEmailAndPassword(auth, "system@adas.com", "adas_system_password_123").catch(() => {});
-    
     const veri = await dbGet("families");
+
     if (veri) {
       tumAileler = veri;
+
+      cmbFamilies.innerHTML =
+        '<option value="" disabled selected>-- Lütfen Ailenizi Seçin --</option>';
+
+      const familyItems = [];
       Object.keys(tumAileler).forEach((aileAdi) => {
         const option = document.createElement("option");
         option.value = aileAdi;
         option.textContent = aileAdi;
         cmbFamilies.appendChild(option);
+
+        familyItems.push({ id: aileAdi, name: aileAdi });
       });
 
+      fillBubbleMenu("menuFamilies", familyItems);
+
       CaptchaUret();
-      loadingArea.classList.add("hidden");
-      loginForm.classList.remove("hidden");
+      if (loadingArea) loadingArea.classList.add("hidden");
+      if (loginForm) loginForm.classList.remove("hidden");
     } else {
-      loadingArea.innerHTML = "<p class='text-amber-400 font-medium'>Sistemde kayıtlı aile bulunamadı!</p>";
+      if (loadingArea) {
+        loadingArea.innerHTML =
+          "<p class='text-amber-400 font-medium text-xs'>Sistemde henüz kayıtlı bir aile bulunamadı!</p>";
+      }
     }
   } catch (error) {
-    loadingArea.innerHTML = "<p class='text-rose-400 font-medium'>Bağlantı hatası oluştu!</p>";
-    HataGoster("Veritabanı bağlantısı başarısız.", "hata");
+    if (loadingArea) {
+      loadingArea.innerHTML =
+        "<p class='text-rose-400 font-medium text-xs'>Veritabanı bağlantısı kurulamadı!</p>";
+    }
+    EngineToastGoster("Veritabanı bağlantısı başarısız.", "hata");
   }
 });
 
 cmbFamilies.addEventListener("change", () => {
   const secilenAile = cmbFamilies.value;
-  cmbMembers.innerHTML = '<option value="" disabled selected>-- Üye Seçiniz --</option>';
+  cmbMembers.innerHTML =
+    '<option value="" disabled selected>-- Üye Seçiniz --</option>';
   cmbMembers.disabled = false;
+
+  const memberTrigger = document.getElementById("selectMemberTrigger");
+  if (memberTrigger) {
+    memberTrigger.classList.remove("opacity-50", "pointer-events-none");
+    const span = memberTrigger.querySelector("#lblSelectedMember");
+    if (span) span.innerText = "-- Üye Seçiniz --";
+  }
 
   if (tumAileler[secilenAile] && tumAileler[secilenAile].members) {
     const uyeler = tumAileler[secilenAile].members;
+    const memberItems = [];
+
     Object.keys(uyeler).forEach((uyeAdi) => {
       const option = document.createElement("option");
       option.value = uyeAdi;
       option.textContent = uyeAdi;
       cmbMembers.appendChild(option);
+
+      memberItems.push({ id: uyeAdi, name: uyeAdi });
     });
+
+    fillBubbleMenu("menuMembers", memberItems);
   } else {
     cmbMembers.disabled = true;
+    if (memberTrigger) {
+      memberTrigger.classList.add("opacity-50", "pointer-events-none");
+    }
   }
 });
 
@@ -102,12 +105,12 @@ loginForm.addEventListener("submit", (e) => {
   const girilenCaptcha = parseInt(txtCaptchaCevap.value.trim());
 
   if (!aile || !uye || !girilenSifre || isNaN(girilenCaptcha)) {
-    HataGoster("Lütfen alanların tamamını ve doğrulamayı doldurun!", "uyari");
+    EngineToastGoster("Lütfen tüm alanları doldurun!", "uyari");
     return;
   }
 
   if (girilenCaptcha !== mevcutCaptchaCevabi) {
-    HataGoster("Robot doğrulaması başarısız! Matematik işlemini kontrol edin.", "hata");
+    EngineToastGoster("Güvenlik doğrulaması hatalı!", "hata");
     CaptchaUret();
     return;
   }
@@ -117,9 +120,12 @@ loginForm.addEventListener("submit", (e) => {
   if (girilenSifre === dogruSifre) {
     sessionStorage.setItem("secilenAile", aile);
     sessionStorage.setItem("secilenUye", uye);
-    window.location.href = "dashboard.html";
+    EngineToastGoster("Giriş başarılı! Yönlendiriliyorsunuz...", "basari");
+    setTimeout(() => {
+      window.location.href = "dashboard.html";
+    }, 1000);
   } else {
-    HataGoster("Hatalı üye giriş şifresi (SistemID)! Lütfen tekrar deneyin.", "hata");
+    EngineToastGoster("Hatalı şifre! Lütfen kontrol edin.", "hata");
     txtPassword.value = "";
     txtPassword.focus();
     CaptchaUret();

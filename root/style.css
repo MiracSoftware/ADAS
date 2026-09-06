@@ -1,7 +1,11 @@
 /* -------------------------------------------------------------------------
  * ADAS SUPERADMIN MONOCHROME PACK
  * ------------------------------------------------------------------------- */
-
+/* Bu stil dosyası, ADAŞ uygulamasının yönetim paneli ve giriş ekranı için özel olarak tasarlanmıştır. 
+ * Karanlık ve aydınlık modlar arasında geçiş yapabilme yeteneği sunar ve kullanıcı deneyimini iyileştirmek için çeşitli görsel efektler içerir. 
+ * Ayrıca, form alanları, kartlar ve butonlar gibi UI bileşenlerinin stilini yönetir.
+ * ------------------------------------------------------------------------- */
+ /*Adas/root/style.css*/
 /* Genel Renk ve Font Yumuşatması */
 body {
   background-color: #0b0f17 !important; /* Derin grafit siyah arka plan */

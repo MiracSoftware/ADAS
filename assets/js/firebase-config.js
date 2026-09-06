@@ -31,16 +31,23 @@ const firebaseConfig = {
   appId: "1:479679067471:web:a04788b2c6eb273504013a",
   measurementId: "G-S3TWFREGG7"
 };
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+
 const SECRET_KEY = "adas_custom_secret_key_2026";
 const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-export const db = getDatabase(app);
+export const db = firebase.database();
+export const auth = firebase.auth();
 
-// Tek seferlik veri çekme fonksiyonu
 export async function dbGet(path) {
-  const dbRef = ref(db);
-  const snapshot = await get(child(dbRef, path));
-  return snapshot.exists() ? snapshot.val() : null;
+  try {
+    const snapshot = await db.ref(path).once("value");
+    return snapshot.val();
+  } catch (err) {
+    console.error("Firebase Get Hatası:", err);
+    throw err;
+  }
 }
 
 // Anlık dinleme fonksiyonu

@@ -1,3 +1,9 @@
+/* Ödeme formu ve kart alanları için temel stil ayarları */
+/* Bu CSS dosyası, ADAŞ ödeme sayfası için özel olarak tasarlanmıştır. 
+   Ödeme formu, kart numarası, son kullanma tarihi ve CVV alanlarının stilini yönetir. 
+   Ayrıca, kullanıcı deneyimini artırmak için yumuşak geçişler ve odaklanma efektleri içerir. */
+   /* Adas/odeme/style.css */
+
 /* Ödeme formunun yumuşak bir şekilde açılma animasyonu */
 #paymentArea {
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
