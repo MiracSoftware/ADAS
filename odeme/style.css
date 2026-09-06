@@ -1,0 +1,20 @@
+/* Ödeme formunun yumuşak bir şekilde açılma animasyonu */
+#paymentArea {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#paymentArea.hidden {
+  opacity: 0;
+  transform: scale(0.95);
+  pointer-events: none;
+}
+
+/* Kart numarası alanındaki fontun okunaklılığı için harf arası boşluk */
+#cardNumber {
+  letter-spacing: 0.15em;
+}
+
+/* Form girdilerine odaklanıldığında neon indigo parlaması */
+input:focus {
+  box-shadow: 0 0 15px rgba(99, 102, 241, 0.25);
+}

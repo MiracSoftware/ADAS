@@ -1,0 +1,114 @@
+/* ==========================================================================
+   ADAŞ GLOBAL TEMA VE PERFORMANS MOTORU
+   ========================================================================== */
+
+/* 1. KARANLIK MOD DEĞİŞKENLERİ (Varsayılan - Derin Gece) */
+:root,
+[data-theme="dark"] {
+  --bg-main: radial-gradient(circle at 50% 50%, #282851 0%, #149573 100%);
+  --card-bg: rgba(35, 112, 114, 0.65);
+  --input-bg: #000010;
+  --text-main: #f3f4f6; /* Göz almayan soft beyaz */
+  --text-muted: #9ca3af;
+  --border-color: rgba(251, 245, 245, 0.298);
+  --blur-value: blur(16px);
+}
+
+/* 2. AYDINLIK MOD DEĞİŞKENLERİ (Premium Konforlu Tonlar) */
+[data-theme="light"] {
+  --bg-main: radial-gradient(circle at 50% 50%, #5757b0 0%, #149573 100%);
+ --card-bg: rgba(38, 141, 145, 0.65);
+  --input-bg: #abeefa71;
+  --text-main: #112d4e; /* Derin konforlu lacivert/siyah */
+  --text-muted: #044c56;
+  --border-color: rgba(53, 97, 147, 0.932);
+  --blur-value: blur(2px);
+}
+
+/* 3. KÜRESEL UYGULAMA */
+body {
+  background: var(--bg-main) !important;
+  color: var(--text-main) !important;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background 0.3s ease,
+    color 0.3s ease;
+}
+
+.login-card,
+.bg-\[\#3a3a3a\],
+.bg-\[\#2b2b2b\] {
+  background-color: var(--card-bg) !important;
+  backdrop-filter: var(--blur-value) !important;
+  -webkit-backdrop-filter: var(--blur-value) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-main) !important;
+}
+
+.form-input,
+select,
+input,
+.captcha-box {
+  background-color: var(--input-bg) !important;
+  color: var(--text-main) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+/* KÜRESEL ETKİLEŞİM ANİMASYONLARI (Varsayılan Durum) */
+button,
+.btn-davranis,
+select,
+input[type="submit"],
+.theme-toggle {
+  transition:
+    transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 0.2s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease !important;
+}
+
+button:hover,
+input[type="submit"]:hover {
+  filter: brightness(0.9);
+  cursor: pointer;
+}
+
+button:active,
+.btn-davranis:active,
+input[type="submit"]:active {
+  transform: scale(0.9) !important;
+}
+
+/* ==========================================================================
+   ⚡ 4. PERFORMANS MODU BARİKATI (AKTİFKEN ÇALIŞACAK)
+   ========================================================================== */
+.performans-modu * {
+  /* Tüm animasyonları ve geçiş sürelerini anında katlet */
+  transition: none !important;
+  animation: none !important;
+  /* Ağır GPU grafik render yüklerini (blur ve gölge) sıfırla */
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+/* Performans modunda buton yaylanmasını engelle */
+.performans-modu button:active,
+.performans-modu .btn-davranis:active,
+.performans-modu input[type="submit"]:active {
+  transform: none !important;
+}
+
+/* Modallar için performans modunda blur yerine düz koyu arka plan */
+.performans-modu .modal-backdrop {
+  backdrop-filter: none !important;
+  background-color: rgba(0, 0, 0, 0.9) !important;
+}

@@ -1,0 +1,130 @@
+/* -------------------------------------------------------------------------
+ * ADAS SUPERADMIN MONOCHROME PACK
+ * ------------------------------------------------------------------------- */
+
+/* Genel Renk ve Font Yumuşatması */
+body {
+  background-color: #0b0f17 !important; /* Derin grafit siyah arka plan */
+  color: #f4f4f5 !important;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+/* Scrollbar Tasarımı */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0b0f17;
+}
+::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #52525b;
+}
+
+/* 🏢 KARTLAR VE ARKA PLANLAR */
+.bg-slate-800 {
+  background-color: #111827 !important; /* Premium Koyu Gri */
+  border-color: #1f2937 !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+}
+
+.bg-slate-900 {
+  background-color: #070a10 !important; /* Hücre İçi Saf Siyah */
+  border-color: #1f2937 !important;
+}
+
+/* 🔘 MONOKROM BUTON RECOV-UP */
+/* Yeni Aile Ekle ve Üye Ekle Butonları (Beyaz Kontrast) */
+.bg-emerald-600,
+.bg-indigo-600 {
+  background-color: #f4f4f5 !important;
+  color: #0b0f17 !important;
+  font-weight: 700 !important;
+  border: 1px solid #ffffff !important;
+  transition: all 0.2s ease-in-out !important;
+}
+.bg-emerald-600:hover,
+.bg-indigo-600:hover {
+  background-color: #ffffff !important;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Güvenli Çıkış ve Tehlikeli İşlemler (Kül Grisi) */
+.bg-red-950\/40,
+.bg-red-950 {
+  background-color: #1f2937 !important;
+  border: 1px solid #374151 !important;
+  color: #d1d5db !important;
+  transition: all 0.2s ease-in-out !important;
+}
+.bg-red-950\/40:hover,
+.bg-red-950:hover {
+  background-color: #374151 !important;
+  color: #ffffff !important;
+}
+
+/* Satır İçi Küçük Düzenleme/İşlem Butonları */
+#familyTableBody button,
+#memberTableBody button {
+  background-color: #1f2937 !important;
+  border: 1px solid #374151 !important;
+  color: #e5e7eb !important;
+}
+#familyTableBody button:hover,
+#memberTableBody button:hover {
+  background-color: #f4f4f5 !important;
+  color: #0b0f17 !important;
+  border-color: #ffffff !important;
+}
+
+/* 🏷️ ROZETLER VE METIN RENKLERI (Muted Grayscale) */
+.text-indigo-400,
+.text-emerald-400,
+.text-amber-400,
+.text-indigo-300 {
+  color: #f3f4f6 !important; /* Yazı renklerini tek tona çekiyoruz */
+}
+
+/* YILLIK / FREE Plan Rozetleri */
+.bg-indigo-500\/20,
+.bg-amber-500\/10 {
+  background-color: #374151 !important;
+  color: #ffffff !important;
+  border: 1px solid #4b5563 !important;
+}
+
+/* 📑 TABLO SATIR ETKİLEŞİMLERİ */
+#familyTableBody tr,
+#memberTableBody tr {
+  transition: background-color 0.15s ease !important;
+  cursor: pointer;
+}
+#familyTableBody tr:hover,
+#memberTableBody tr:hover {
+  background-color: #1f2937 !important;
+}
+
+/* Aktif Seçilen Satır Efekti */
+.bg-indigo-950\/40,
+.bg-emerald-950\/40 {
+  background-color: #1f2937 !important;
+  border-left: 4px solid #ffffff !important;
+}
+
+/* 🔒 GİRİŞ EKRANI VE INPUTLARIN DÜZELTİLMESİ */
+input,
+select {
+  background-color: #070a10 !important;
+  border: 1px solid #374151 !important;
+  color: #ffffff !important;
+  padding: 0.75rem 1rem !important; /* Sıkışmayı önleyen nefes payı */
+  border-radius: 0.75rem !important;
+}
+input:focus,
+select:focus {
+  border-color: #9ca3af !important;
+}

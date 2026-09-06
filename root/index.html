@@ -1,0 +1,489 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ADAS - Aile Davranış Yönetim Merkezi</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  </head>
+  <body class="bg-[#0f172a] text-slate-100 min-h-screen font-sans">
+    <!-- Yönetici Doğrulama-->
+    <div
+      id="authContainer"
+      class="fixed inset-0 bg-[#0f172a] z-50 flex items-center justify-center p-4"
+    >
+      <div
+        class="bg-slate-800 p-8 rounded-2xl border border-slate-700 max-w-sm w-full shadow-2xl text-center"
+      >
+        <div class="text-indigo-400 text-4xl mb-3">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <h2 class="text-xl font-bold mb-1">Yönetici Doğrulaması</h2>
+        <p class="text-xs text-slate-400 mb-6">
+          Devam etmek için yetkili kimlik bilgilerini girin.
+        </p>
+        <form id="loginForm" class="space-y-4">
+          <input
+            type="text"
+            id="adminUser"
+            placeholder="Kullanıcı Adı"
+            required
+            class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500 text-white"
+          />
+          <input
+            type="password"
+            id="adminPass"
+            placeholder="Yönetici Şifresi"
+            required
+            class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500 text-white"
+          />
+          <button
+            type="submit"
+            class="w-full bg-indigo-600 hover:bg-indigo-700 py-3 rounded-xl font-bold text-xs tracking-wider uppercase transition"
+          >
+            Sisteme Giriş Yap
+          </button>
+        </form>
+        <div class="mt-4">
+          <a
+            href="../index.html"
+            class="text-xs text-slate-400 hover:text-white transition"
+          >
+            <button
+              type="button"
+              class="w-full bg-slate-700 py-2 rounded-xl text-xs font-semibold"
+            >
+              Geri Dön
+            </button>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!--Yönetim Paneli Dashboard -->
+    <div id="panelContainer" class="hidden">
+      <header
+        class="bg-slate-800 border-b border-slate-700 px-6 py-4 flex justify-between items-center"
+      >
+        <div class="flex items-center gap-3">
+          <span class="text-indigo-400 text-xl"
+            ><i class="fa-solid fa-layout-sidebar"></i
+          ></span>
+          <h1 class="text-md font-bold tracking-wide">
+            ADAS Yönetim Paneli
+            <span class="text-xs text-emerald-400 font-normal"
+              >| Veri İzleme Modu</span
+            >
+          </h1>
+        </div>
+        <button
+          onclick="LogOut()"
+          class="text-xs bg-red-950/40 border border-red-800/60 text-red-400 px-3 py-1.5 rounded-lg hover:bg-red-900 hover:text-white transition"
+        >
+          Güvenli Çıkış
+        </button>
+      </header>
+
+      <main class="p-6 max-w-7xl mx-auto space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div
+            class="lg:col-span-1 bg-slate-800 p-5 rounded-2xl border border-slate-700 shadow-xl flex flex-col h-[320px]"
+          >
+            <h2
+              class="text-sm font-bold text-amber-400 mb-4 flex items-center gap-2"
+            >
+              <i class="fa-solid fa-bell animate-pulse"></i> Bekleyen Kayıt
+              Talepleri
+            </h2>
+            <div
+              id="requestList"
+              class="space-y-3 overflow-y-auto flex-1 pr-1 text-xs"
+            >
+              <p class="text-slate-500 text-center py-8">
+                Şu an bekleyen talep bulunmuyor.
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="lg:col-span-2 bg-slate-800 p-5 rounded-2xl border border-slate-700 shadow-xl flex flex-col h-[320px]"
+          >
+            <div class="flex justify-between items-center mb-4">
+              <h2
+                class="text-sm font-bold text-indigo-400 flex items-center gap-2"
+              >
+                <i class="fa-solid fa-users"></i> Kayıtlı Aile Grupları
+              </h2>
+              <button
+                onclick="OpenAddModal()"
+                class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition"
+              >
+                + Yeni Aile Ekle
+              </button>
+            </div>
+            <div
+              class="flex-1 overflow-auto border border-slate-700 rounded-xl bg-slate-900 text-xs"
+            >
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr
+                    class="bg-slate-800/80 border-b border-slate-700 text-slate-400 font-bold sticky top-0"
+                  >
+                    <th class="p-3">Grup Anahtarı</th>
+                    <th class="p-3">Lisans Türü</th>
+                    <th class="p-3">Üye Kontenjanı</th>
+                    <th class="p-3">Bitiş Tarihi</th>
+                    <th class="p-3 text-right">İşlemler</th>
+                  </tr>
+                </thead>
+                <tbody id="familyTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div
+          id="subManagementSection"
+          class="hidden grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in"
+        >
+          <div
+            class="lg:col-span-2 bg-slate-800 p-5 rounded-2xl border border-slate-700 shadow-xl flex flex-col h-[350px]"
+          >
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="text-sm font-bold text-emerald-400">
+                <i class="fa-solid fa-user-graduate"></i>
+                <span id="selectedFamilyTitle">---</span>'ne Kayıtlı Üyeler
+              </h3>
+              <button
+                onclick="OpenMemberModal('', '', '100', '', 'Çocuk')"
+                class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition"
+              >
+                + Aileye Yeni Üye Ekle
+              </button>
+            </div>
+            <div
+              class="flex-1 overflow-auto border border-slate-700 rounded-xl bg-slate-900 text-xs"
+            >
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr
+                    class="bg-slate-800/80 border-b border-slate-700 text-slate-400 font-bold sticky top-0"
+                  >
+                    <th class="p-3">Üye ID</th>
+                    <th class="p-3">İsim Soyisim</th>
+                    <th class="p-3">Yaş / Statü</th>
+                    <th class="p-3">Güncel Puan</th>
+                    <th class="p-3 text-right">İşlemler</th>
+                  </tr>
+                </thead>
+                <tbody id="memberTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div
+            class="lg:col-span-1 bg-slate-800 p-5 rounded-2xl border border-slate-700 shadow-xl flex flex-col h-[350px]"
+          >
+            <h3
+              class="text-sm font-bold text-slate-300 mb-4 flex items-center gap-2"
+            >
+              <i class="fa-solid fa-clock-rotate-left"></i> İşlem ve Puan Log
+              Geçmişi
+            </h3>
+            <div
+              id="logContainer"
+              class="space-y-2 overflow-y-auto flex-1 pr-1 text-[11px]"
+            >
+              <p class="text-slate-500 text-center py-8">
+                İşlem geçmişini görmek için bir grup seçin.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div
+          id="memberDetailSection"
+          class="hidden bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl animate-fade-in"
+        >
+          <div
+            class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-700 pb-4 mb-4"
+          >
+            <div>
+              <span
+                class="text-xs font-bold text-indigo-400 uppercase tracking-wider"
+                >Detaylı İnceleme Paneli</span
+              >
+              <h3
+                class="text-xl font-black text-white flex items-center gap-2 mt-0.5"
+              >
+                <i class="fa-solid fa-id-card text-emerald-400"></i>
+                <span id="detName">---</span>
+              </h3>
+            </div>
+            <div
+              class="flex items-center gap-2 bg-slate-900 p-2 rounded-xl border border-slate-700"
+            >
+              <span class="text-[11px] font-bold text-slate-400 px-2"
+                >Hızlı Puan Yönetimi:</span
+              >
+              <button
+                onclick="HizliPuanVer(25)"
+                class="bg-emerald-950 text-emerald-400 border border-emerald-800/40 px-2.5 py-1 rounded-md text-xs font-bold hover:bg-emerald-600 hover:text-white transition"
+              >
+                +25
+              </button>
+              <button
+                onclick="HizliPuanVer(10)"
+                class="bg-emerald-950 text-emerald-400 border border-emerald-800/40 px-2.5 py-1 rounded-md text-xs font-bold hover:bg-emerald-600 hover:text-white transition"
+              >
+                +10
+              </button>
+              <button
+                onclick="HizliPuanVer(-10)"
+                class="bg-red-950 text-red-400 border border-red-900/40 px-2.5 py-1 rounded-md text-xs font-bold hover:bg-red-600 hover:text-white transition"
+              >
+                -10
+              </button>
+              <button
+                onclick="HizliPuanVer(-25)"
+                class="bg-red-950 text-red-400 border border-red-900/40 px-2.5 py-1 rounded-md text-xs font-bold hover:bg-red-600 hover:text-white transition"
+              >
+                -25
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 text-xs"
+          >
+            <div class="bg-slate-900 p-3 rounded-xl border border-slate-700/60">
+              <div class="text-slate-400 mb-0.5">Üye Sistem ID</div>
+              <div
+                id="detId"
+                class="font-mono font-bold text-white text-[13px]"
+              >
+                ---
+              </div>
+            </div>
+            <div class="bg-slate-900 p-3 rounded-xl border border-slate-700/60">
+              <div class="text-slate-400 mb-0.5">Yaş Grubu</div>
+              <div id="detAge" class="font-bold text-white text-[13px]">
+                ---
+              </div>
+            </div>
+            <div class="bg-slate-900 p-3 rounded-xl border border-slate-700/60">
+              <div class="text-slate-400 mb-0.5">Mevcut Analiz Puanı</div>
+              <div id="detPoints" class="font-black text-amber-400 text-[13px]">
+                ---
+              </div>
+            </div>
+            <div
+              class="bg-slate-900 p-3 rounded-xl border border-slate-700/60 col-span-1 md:col-span-1 lg:col-span-1"
+            >
+              <div class="text-slate-400 mb-0.5">Aile İçi Rol</div>
+              <div id="detRank" class="font-bold text-indigo-300 text-[13px]">
+                ---
+              </div>
+            </div>
+            <div
+              class="bg-slate-900 p-3 rounded-xl border border-slate-700/60 col-span-1 md:col-span-2 lg:col-span-1"
+            >
+              <div class="text-slate-400 mb-0.5">İlk Kayıt Tarihi</div>
+              <div id="detFirstReg" class="text-slate-300 text-[11px]">---</div>
+            </div>
+            <div
+              class="bg-slate-900 p-3 rounded-xl border border-slate-700/60 col-span-1 md:col-span-2 lg:col-span-1"
+            >
+              <div class="text-slate-400 mb-0.5">Son İşlem Tarihi</div>
+              <div id="detLastAction" class="text-emerald-400 text-[11px]">
+                ---
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer
+        class="text-center py-6 text-[11px] text-slate-500 border-t border-slate-800/60 mt-12"
+      >
+        ADAS Altyapısı Pedagojik Veri İzleme Protokolü. KVKK mevzuatına
+        uygundur.
+      </footer>
+    </div>
+
+    <div
+      id="crudModal"
+      class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+    >
+      <div
+        class="bg-slate-800 border border-slate-700 w-full max-w-md rounded-2xl p-5 shadow-2xl space-y-4"
+      >
+        <h3 id="modalTitle" class="text-sm font-bold text-indigo-400">
+          Yeni Aile Yapısı Tanımla
+        </h3>
+        <form id="crudForm" class="space-y-3 text-xs">
+          <input type="hidden" id="editKey" />
+          <div>
+            <label class="block text-slate-400 mb-1"
+              >Grup Benzersiz ID (Giriş Kodu)</label
+            >
+            <input
+              type="text"
+              id="modalFamilyKey"
+              required
+              placeholder="yilmaz_ailesi"
+              class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 outline-none focus:border-indigo-500 text-white"
+            />
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-slate-400 mb-1">Plan Rütbesi</label>
+              <select
+                id="modalPlanType"
+                class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 outline-none focus:border-indigo-500 text-white"
+              >
+                <option value="spec">ÖZEL</option>
+                <option value="free">FREE</option>
+                <option value="haftalik">HAFTALIK</option>
+                <option value="aylik">AYLIK</option>
+                <option value="yillik">YILLIK</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-slate-400 mb-1"
+                >Maksimum Üye Limiti</label
+              >
+              <input
+                type="number"
+                id="modalUyeLimiti"
+                value="1"
+                required
+                class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 outline-none focus:border-indigo-500 text-white"
+              />
+            </div>
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1"
+              >Abonelik Bitiş Tarihi</label
+            >
+            <input
+              type="text"
+              id="modalEndDate"
+              placeholder="2026-06-19 14:00:00"
+              class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 outline-none focus:border-indigo-500 text-white"
+            />
+          </div>
+          <div class="flex justify-end gap-2 pt-2">
+            <button
+              type="button"
+              onclick="CloseCrudModal()"
+              class="bg-slate-700 text-slate-300 px-4 py-2 rounded-lg font-medium"
+            >
+              İptal
+            </button>
+            <button
+              type="submit"
+              class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-bold"
+            >
+              Kaydet ve Veritabanına Yaz
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div
+      id="memberModal"
+      class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+    >
+      <div
+        class="bg-slate-800 border border-slate-700 w-full max-w-sm rounded-2xl p-5 shadow-2xl space-y-4"
+      >
+        <h3 id="memberModalTitle" class="text-sm font-bold text-emerald-400">
+          Yeni Birey Ekle
+        </h3>
+        <form id="memberForm" class="space-y-3 text-xs">
+          <input type="hidden" id="editMemberId" />
+          <div>
+            <label class="block text-slate-400 mb-1">Sistem ID (şifre)</label>
+            <input
+              type="text"
+              id="memberIdent"
+              required
+              placeholder="2006, 1998"
+              class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 outline-none focus:border-emerald-500 text-white"
+            />
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Ad Soyad</label>
+            <input
+              type="text"
+              id="memberName"
+              required
+              placeholder="İsmail Miraç Koca"
+              class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 outline-none focus:border-emerald-500 text-white"
+            />
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-slate-400 mb-1">Yaş</label>
+              <input
+                type="number"
+                id="memberAge"
+                required
+                placeholder="16"
+                class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 outline-none focus:border-emerald-500 text-white"
+              />
+            </div>
+            <div>
+              <label class="block text-slate-400 mb-1">Başlangıç Puanı</label>
+              <input
+                type="number"
+                id="memberPoints"
+                value="100"
+                required
+                class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 outline-none focus:border-emerald-500 text-white"
+              />
+            </div>
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Rol / Statü</label>
+            <select
+              id="memberRol"
+              class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 outline-none focus:border-emerald-500 text-white"
+            >
+              <option value="Çocuk">Çocuk</option>
+              <option value="Anne">Anne</option>
+              <option value="Baba">Baba</option>
+            </select>
+          </div>
+          <div class="flex justify-end gap-2 pt-2">
+            <button
+              type="button"
+              onclick="CloseMemberModal()"
+              class="bg-slate-700 text-slate-300 px-4 py-2 rounded-lg font-medium"
+            >
+              İptal
+            </button>
+            <button
+              type="submit"
+              class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg font-bold"
+            >
+              Veriyi Kaydet
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  </body>
+</html>

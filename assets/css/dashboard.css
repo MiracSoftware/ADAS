@@ -1,0 +1,57 @@
+/* Puan Durum Renkleri (Web Arayüzü İçin Dinamik Yapı) */
+.puan-sifir {
+  color: #f59e0b !important;
+}
+.puan-pozitif {
+  color: #10b981 !important;
+}
+.puan-negatif {
+  color: #ef4444 !important;
+}
+
+/* Dashboard Puanlama Butonlarının Opaklık ve Blur Tasarımı */
+.btn-davranis {
+  font-weight: 600;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.btn-davranis:hover {
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+  opacity: 0.95;
+}
+
+/* Olumlu Davranış Renk Paleti (Saydam Katmanlı) */
+.bg-pozitif-5 {
+  background-color: rgba(16, 185, 129, 0.22) !important;
+  color: #34d399 !important;
+}
+.bg-pozitif-10 {
+  background-color: rgba(5, 150, 105, 0.32) !important;
+  color: #6ee7b7 !important;
+}
+.bg-pozitif-max {
+  background-color: rgba(6, 78, 59, 0.45) !important;
+  color: #a7f3d0 !important;
+}
+
+/* Olumsuz Davranış Renk Paleti (Saydam Katmanlı) */
+.bg-negatif-5 {
+  background-color: rgba(249, 115, 22, 0.22) !important;
+  color: #fdba74 !important;
+}
+.bg-negatif-10 {
+  background-color: rgba(239, 68, 68, 0.28) !important;
+  color: #fca5a5 !important;
+}
+.bg-negatif-max {
+  background-color: rgba(153, 27, 27, 0.45) !important;
+  color: #fecaca !important;
+}
+
+.modal-backdrop {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background-color: rgba(0, 0, 0, 0.65);
+}

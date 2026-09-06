@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>MiracOS | System_State_Critical</title>
+    <style>
+      /* Tam Kısıtlama: Seçme, Tıklama, Kaydırma Engellendi */
+      * {
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: none;
+        cursor: none !important;
+      }
+
+      body {
+        background-color: #050505; /* Tam siyah değil, derin bir gri-siyah */
+        color: #a0a0a0;
+        font-family:
+          "Segoe UI", "Roboto", "monospace"; /* Modern ama teknik fontlar */
+        margin: 0;
+        padding: 40px;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        box-sizing: border-box;
+        overflow: hidden;
+      }
+
+      /* Ana Konteyner */
+      .system-container {
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      /* MiracOS Kimlik Başlığı */
+      .brand {
+        color: #ffffff;
+        font-weight: 600;
+        font-size: 1.2rem;
+        letter-spacing: 2px;
+        margin-bottom: 5px;
+        border-bottom: 1px solid #1a1a1a;
+        padding-bottom: 10px;
+      }
+
+      .sub-header {
+        font-size: 0.8rem;
+        color: #444;
+        margin-bottom: 40px;
+        text-transform: uppercase;
+      }
+
+      /* Hata Bloğu */
+      .error-block {
+        margin-bottom: 30px;
+      }
+
+      .status-tag {
+        display: inline-block;
+        background-color: #330000;
+        color: #ff3333;
+        padding: 2px 8px;
+        font-size: 0.75rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      .error-title {
+        color: #eee;
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+      }
+
+      /* Sistem Logları */
+      .logs {
+        font-family: "Courier New", monospace;
+        font-size: 0.85rem;
+        line-height: 1.6;
+        color: #666;
+      }
+
+      .cursor-blink {
+        display: inline-block;
+        width: 8px;
+        height: 15px;
+        background-color: #666;
+        animation: blink 1s infinite;
+        vertical-align: middle;
+        margin-left: 5px;
+      }
+
+      @keyframes blink {
+        0% {
+          opacity: 0;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+
+      /* Mobil Düzenleme */
+      @media (max-width: 768px) {
+        body {
+          padding: 20px;
+          justify-content: flex-start;
+        }
+        .brand {
+          font-size: 1rem;
+        }
+        .error-title {
+          font-size: 1.2rem;
+        }
+        .logs {
+          font-size: 0.75rem;
+        }
+      }
+    </style>
+  </head>
+  <body oncontextmenu="return false;" onkeydown="return false;">
+    <div class="system-container">
+      <div class="brand">MiracOS Core / MirUI 8.5</div>
+      <div class="sub-header">Automated Recovery & Diagnostic System</div>
+
+      <div class="error-block">
+        <div class="status-tag">CORE_HALT</div>
+        <div class="error-title">HTTP_503: SERVICE_UNAVAILABLE</div>
+        <p>
+          Sistem arayüzü yönetici talimatıyla askıya alındı. Veri akışı güvenli
+          modda durduruldu.
+        </p>
+      </div>
+
+      <div class="logs">
+        > [30.04.2026 10:51] Power failure detected (External)<br />
+        > [30.04.2026 10:51] MirUI_Interface_Manager: Dropped<br />
+        > [30.04.2026 10:52] Syncing local databases... Done.<br />
+        > [30.04.2026 10:52] Entering Deep Sleep Mode.<br />
+        > Next check sequence: Sunday, 21:00 GMT+3<br />
+        <span class="cursor-blink"></span>
+      </div>
+    </div>
+
+    <script>
+      // JS tabanlı ek korumalar
+      document.addEventListener("contextmenu", (e) => e.preventDefault());
+      document.addEventListener("keydown", (e) => {
+        if (e.ctrlKey || e.key === "F12") e.preventDefault();
+      });
+    </script>
+  </body>
+</html>

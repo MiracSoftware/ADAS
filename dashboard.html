@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ADAŞ | Kullanıcı Paneli</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <link rel="stylesheet" href="assets/css/dashboard.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  </head>
+  <body class="min-h-screen p-4 md:p-8">
+    <div
+      id="toastContainer"
+      class="fixed top-5 right-5 z-50 space-y-3 pointer-events-none"
+    ></div>
+
+    <div id="mainDashboard" class="hidden max-w-5xl mx-auto space-y-6">
+      <div
+        class="flex flex-col md:flex-row justify-between items-center bg-[#3a3a3a] p-4 rounded-lg shadow gap-4 relative"
+      >
+        <div>
+          <h1
+            id="lblWelcome"
+            class="text-xl md:text-2xl font-bold text-orange-400"
+          >
+            Yükleniyor...
+          </h1>
+          <p id="lblFamilyName" class="text-xs md:text-sm opacity-60">
+            Aile Grubu: --
+          </p>
+        </div>
+        <div
+          class="flex flex-wrap items-center gap-3 w-full md:w-auto justify-end"
+        >
+          <button
+            id="btnTogglePerformance"
+            title="Performans Modu"
+            class="bg-gray-700/40 p-2 rounded text-sm w-9 h-9"
+          >
+            ⚡
+          </button>
+          <button
+            id="btnToggleTheme"
+            title="Tema Değiştir"
+            class="bg-gray-700/40 p-2 rounded text-sm w-9 h-9"
+          >
+            🌓
+          </button>
+
+          <button
+            id="btnOpenPuanlaModal"
+            class="bg-amber-600 hover:bg-amber-700 text-white font-semibold px-4 py-2 rounded text-sm flex items-center gap-2"
+          >
+            ⭐ Puanla
+          </button>
+          <button
+            id="btnLogout"
+            class="bg-rose-600 hover:bg-rose-700 text-white font-medium px-4 py-2 rounded text-sm"
+          >
+            Çıkış
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div
+          class="bg-[#3a3a3a] p-6 rounded-lg text-center flex flex-col items-center justify-center"
+        >
+          <h3
+            class="opacity-60 uppercase tracking-wider text-sm font-semibold mb-2"
+          >
+            Güncel Toplam Puanınız
+          </h3>
+          <span
+            id="lblTotalPuan"
+            class="text-5xl md:text-6xl font-black tracking-tight"
+            >0</span
+          >
+        </div>
+        <div class="bg-[#3a3a3a] p-6 rounded-lg space-y-3">
+          <h3
+            class="opacity-60 uppercase tracking-wider text-sm font-semibold border-b border-white/10 pb-2"
+          >
+            Profil Detayları
+          </h3>
+          <div class="flex justify-between text-sm">
+            <span class="opacity-60">Rol / Statü:</span>
+            <span id="lblStatus" class="font-bold text-orange-300">--</span>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="opacity-60">Sistem ID:</span>
+            <span id="lblSistemID" class="font-mono">--</span>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="opacity-60">Son İşlem:</span>
+            <span
+              id="lblLastAction"
+              class="opacity-80 text-right max-w-[200px] truncate"
+              >--</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-[#3a3a3a] p-6 rounded-lg space-y-4">
+        <div
+          class="flex justify-between items-center border-b border-white/10 pb-3"
+        >
+          <h2 class="text-lg md:text-xl font-bold tracking-wide">
+            Kişisel İşlem Geçmişi Takibi
+          </h2>
+          <span
+            id="lblLogCount"
+            class="bg-black/20 text-xs px-2.5 py-1 rounded-full text-gray-400"
+            >0 Kayıt</span
+          >
+        </div>
+        <div class="overflow-x-auto w-full rounded border border-white/5">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr
+                class="bg-black/20 opacity-80 text-xs uppercase tracking-wider border-b border-white/10"
+              >
+                <th class="p-3">Tarih</th>
+                <th class="p-3">İşlem Yapan</th>
+                <th class="p-3">İşlem Türü</th>
+                <th class="p-3">Değişim</th>
+                <th class="p-3">İşlem Notu</th>
+              </tr>
+            </thead>
+            <tbody
+              id="tbodyLogs"
+              class="text-sm divide-y divide-white/5"
+            ></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="puanlaModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
+        <div class="bg-[#3a3a3a] w-full max-w-2xl rounded-xl shadow-2xl flex flex-col max-h-[85vh]">
+            
+            <div class="p-4 border-b border-white/10 flex justify-between items-center bg-black/20 rounded-t-xl">
+                <h2 class="text-lg font-bold text-orange-400">⭐ Aile İçi Davranış Puanlama</h2>
+                <button id="btnClosePuanlaModal" class="opacity-60 hover:opacity-100 text-xl font-bold px-2">✕</button>
+            </div>
+            
+            <div class="p-5 overflow-y-auto space-y-4 flex-1">
+                
+                <div>
+                    <label class="block text-xs uppercase tracking-wider opacity-60 font-bold mb-1.5">Puanlanacak Aile Üyesi</label>
+                    <select id="cmbModalMembers" class="form-input font-medium"></select>
+                </div>
+
+                <div class="relative">
+                    <label class="block text-xs uppercase tracking-wider text-amber-400 font-bold mb-1.5">🔍 Davranış Ara (Anlık Filtrele)</label>
+                    <input type="text" id="txtDavranisAra" placeholder="Aradığınız davranışı yazın (Örn: kitap, düzen, saygı)..." class="form-input w-full rounded-xl p-3 text-sm font-medium">
+                </div>
+
+                <div class="flex border-b border-white/10 bg-black/20 p-1 rounded-lg">
+                    <button id="tabOlumlu" class="flex-1 text-center py-2 text-sm font-bold rounded-md bg-emerald-600 text-white">😇 Olumlu Davranışlar</button>
+                    <button id="tabOlumsuz" class="flex-1 text-center py-2 text-sm font-bold rounded-md opacity-60 hover:opacity-100">😈 Olumsuz Davranışlar</button>
+                </div>
+
+
+                <!-- Olumlu Davranışlar -->
+                <div id="areaOlumlu" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    
+                    <div class="col-span-1 sm:col-span-2 text-xs font-bold text-emerald-400 uppercase tracking-wider mt-1 border-b border-white/5 pb-1 category-title">📚 Eğitim & Akademik</div>
+                    <button class="btn-davranis bg-pozitif-5 p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="20" data-tur="Ders Çalışma" data-not="Planlı ders çalışması yaptı">
+                        <span>✍️ Ders Çalışma</span> <span class="text-xs font-bold bg-emerald-500/20 px-2 py-1 rounded text-emerald-300">+20 P</span>
+                    </button>
+                    <button class="btn-davranis bg-pozitif-5 p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="5" data-tur="Ödev" data-not="Ödevlerini eksiksiz tamamladı">
+                        <span>📝 Ödevini Yapma</span> <span class="text-xs font-bold bg-emerald-500/20 px-2 py-1 rounded text-emerald-300">+5 P</span>
+                    </button>
+                    <button class="btn-davranis bg-pozitif-5 p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="20" data-tur="Kitap Okuma" data-not="Düzenli kitap okuma aktivitesi yaptı">
+                        <span>📖 Kitap Okuma</span> <span class="text-xs font-bold bg-emerald-500/20 px-2 py-1 rounded text-emerald-300">+20 P</span>
+                    </button>
+                    <button class="btn-davranis bg-pozitif-5 p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="20" data-tur="Akademik Başarı" data-not="Akademik süreçte başarı sergiledi">
+                        <span>🎓 Akademik Başarı</span> <span class="text-xs font-bold bg-emerald-500/20 px-2 py-1 rounded text-emerald-300">+20 P</span>
+                    </button>
+
+                    <div class="col-span-1 sm:col-span-2 text-xs font-bold text-emerald-400 uppercase tracking-wider mt-2 border-b border-white/5 pb-1 category-title">🏡 Sorumluluk & Ev Düzeni</div>
+                    <button class="btn-davranis bg-pozitif-10 p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="10" data-tur="Sorumruluk" data-not="Verilen sorumluluğu üstlendi ve yaptı">
+                        <span>🛡️ Sorumluluk Alma</span> <span class="text-xs font-bold bg-emerald-500/20 px-2 py-1 rounded text-emerald-300">+10 P</span>
+                    </button>
+                    <button class="btn-davranis bg-pozitif-10 p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="10" data-tur="Temizlik ve Düzen" data-not="Genel temizlik ve düzen kurallarına uydu">
+                        <span>🧹 Temizlik ve Düzen</span> <span class="text-xs font-bold bg-emerald-500/20 px-2 py-1 rounded text-emerald-300">+10 P</span>
+                    </button>
+                    <button class="btn-davranis bg-pozitif-10 p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="10" data-tur="Oda Temizliği" data-not="Odasını temizledi ve düzenledi">
+                        <span>🛌 Oda Temizliği</span> <span class="text-xs font-bold bg-emerald-500/20 px-2 py-1 rounded text-emerald-300">+10 P</span>
+                    </button>
+                    <button class="btn-davranis bg-pozitif-10 p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="15" data-tur="Ev İşleri" data-not="Ev işlerine aktif destek sağladı">
+                        <span>🧺 Ev İşlerine Destek</span> <span class="text-xs font-bold bg-emerald-500/20 px-2 py-1 rounded text-emerald-300">+15 P</span>
+                    </button>
+
+                    <div class="col-span-1 sm:col-span-2 text-xs font-bold text-emerald-400 uppercase tracking-wider mt-2 border-b border-white/5 pb-1 category-title">❤️ Ahlak & İletişim</div>
+                    <button class="btn-davranis bg-pozitif-max p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="10" data-tur="Anne/Baba Yardımı" data-not="Anne veya babasına doğrudan yardım etti">
+                        <span>👑 Anne/Babaya Yardım</span> <span class="text-xs font-bold bg-emerald-500/20 px-2 py-1 rounded text-emerald-300">+10 P</span>
+                    </button>
+                    <button class="btn-davranis bg-pozitif-max p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="5" data-tur="Kardeş Yardımı" data-not="Kardeşine destek oldu">
+                        <span>👶 Kardeşe Yardım</span> <span class="text-xs font-bold bg-emerald-500/20 px-2 py-1 rounded text-emerald-300">+5 P</span>
+                    </button>
+                    <button class="btn-davranis bg-pozitif-max p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="5" data-tur="Akran Nezaketi" data-not="Çevresine ve akranlarına nazik davrandı">
+                        <span>🤝 Akran Nezaketi (+)</span> <span class="text-xs font-bold bg-emerald-500/20 px-2 py-1 rounded text-emerald-300">+5 P</span>
+                    </button>
+                    <button class="btn-davranis bg-pozitif-max p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="5" data-tur="Cömertlik" data-not="Cömertlik ve paylaşımcılık örneği gösterdi">
+                        <span>💎 Cömertlik</span> <span class="text-xs font-bold bg-emerald-500/20 px-2 py-1 rounded text-emerald-300">+5 P</span>
+                    </button>
+                    <button class="btn-davranis bg-pozitif-max p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="25" data-tur="Emanete Minnet" data-not="Emanete sadık kalarak minnet kazandı">
+                        <span>📦 Emanete Minnet</span> <span class="text-xs font-bold bg-emerald-500/20 px-2 py-1 rounded text-emerald-300">+25 P</span>
+                    </button>
+                    <button class="btn-davranis bg-pozitif-max p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="10" data-tur="Saygılı Davranış" data-not="Büyüklere ve kurallara saygı gösterdi">
+                        <span>✊ Saygılı Davranış</span> <span class="text-xs font-bold bg-emerald-500/20 px-2 py-1 rounded text-emerald-300">+10 P</span>
+                    </button>
+
+                    <div class="col-span-1 sm:col-span-2 text-xs font-bold text-emerald-400 uppercase tracking-wider mt-2 border-b border-white/5 pb-1 category-title">🧘 Sağlık & Özbakım</div>
+                    <button class="btn-davranis bg-pozitif-5 p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="10" data-tur="Kişisel Bakım" data-not="Kişisel bakım süreçlerini aksatmadan yaptı">
+                        <span>🧴 Kişisel Bakım (+)</span> <span class="text-xs font-bold bg-emerald-500/20 px-2 py-1 rounded text-emerald-300">+10 P</span>
+                    </button>
+                    <button class="btn-davranis bg-pozitif-5 p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="15" data-tur="Kişisel Temizlik" data-not="Kişisel temizlik ve hijyen kurallarına uydu">
+                        <span>🧼 Kişisel Temizlik (+)</span> <span class="text-xs font-bold bg-emerald-500/20 px-2 py-1 rounded text-emerald-300">+15 P</span>
+                    </button>
+                    <button class="btn-davranis bg-pozitif-5 p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="10" data-tur="Düzenli Uyku" data-not="Uyku saatlerine riayet etti">
+                        <span>⏰ Düzenli Uyku (+)</span> <span class="text-xs font-bold bg-emerald-500/20 px-2 py-1 rounded text-emerald-300">+10 P</span>
+                    </button>
+                </div>
+
+                <div id="areaOlumsuz" class="grid grid-cols-1 sm:grid-cols-2 gap-3 hidden">
+                    
+                    <div class="col-span-1 sm:col-span-2 text-xs font-bold text-rose-400 uppercase tracking-wider mt-1 border-b border-white/5 pb-1 category-title">⚠️ Sorumsuzluk & İhmal</div>
+                    <button class="btn-davranis bg-negatif-5 p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="-10" data-tur="Sorumsuzluk" data-not="Sorumsuz davranış sergiledi">
+                        <span>❌ Sorumsuzluk</span> <span class="text-xs font-bold bg-rose-500/20 px-2 py-1 rounded text-rose-300">-10 P</span>
+                    </button>
+                    <button class="btn-davranis bg-negatif-5 p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="-5" data-tur="Cimrilik" data-not="Paylaşımdan kaçındı, cimrilik yaptı">
+                        <span>🥀 Cimrilik</span> <span class="text-xs font-bold bg-rose-500/20 px-2 py-1 rounded text-rose-300">-5 P</span>
+                    </button>
+                    <button class="btn-davranis bg-negatif-5 p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="-10" data-tur="Yalan" data-not="Yalan veya yanıltıcı beyanda bulundu">
+                        <span>🤥 Yalan / Yanıltma</span> <span class="text-xs font-bold bg-rose-500/20 px-2 py-1 rounded text-rose-300">-10 P</span>
+                    </button>
+                    <button class="btn-davranis bg-negatif-5 p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="-5" data-tur="Akran Nezaketi" data-not="Akranlarına karşı nezaketsiz davrandı">
+                        <span>😤 Akran Nezaketi (-)</span> <span class="text-xs font-bold bg-rose-500/20 px-2 py-1 rounded text-rose-300">-5 P</span>
+                    </button>
+
+                    <div class="col-span-1 sm:col-span-2 text-xs font-bold text-rose-400 uppercase tracking-wider mt-2 border-b border-white/5 pb-1 category-title">🚫 Ağır İhlaller & Kusurlar</div>
+                    <button class="btn-davranis bg-negatif-max p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="-35" data-tur="Mal Zararı" data-not="Ev eşyalarına veya ortak mala bilerek/isteyerek zarar verdi">
+                        <span>💥 Ev Malına Zarar</span> <span class="text-xs font-bold bg-rose-500/20 px-2 py-1 rounded text-rose-300">-35 P</span>
+                    </button>
+                    <button class="btn-davranis bg-negatif-max p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="-40" data-tur="Kavga" data-not="Ev huzurunu kaçırdı, hırçın kavga çıkardı">
+                        <span>🔥 Huzur Kaçırma / Kavga</span> <span class="text-xs font-bold bg-rose-500/20 px-2 py-1 rounded text-rose-300">-40 P</span>
+                    </button>
+                    <button class="btn-davranis bg-negatif-max p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="-20" data-tur="Zararlı Alışkanlık" data-not="Sigara veya alkol kullanımı/özentisi tespit edildi">
+                        <span>🚬 Sigara & Alkol</span> <span class="text-xs font-bold bg-rose-500/20 px-2 py-1 rounded text-rose-300">-20 P</span>
+                    </button>
+                    <button class="btn-davranis bg-negatif-max p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="-40" data-tur="İhanet" data-not="Verilen emanete hıyanet etti">
+                        <span>🚨 Emanete İhanet</span> <span class="text-xs font-bold bg-rose-500/20 px-2 py-1 rounded text-rose-300">-40 P</span>
+                    </button>
+                    <button class="btn-davranis bg-negatif-max p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="-20" data-tur="Kötü Alışkanlık" data-not="Genel ahlaka uymayan kötü alışkanlık sergiledi">
+                        <span>👺 Kötü Alışkanlık</span> <span class="text-xs font-bold bg-rose-500/20 px-2 py-1 rounded text-rose-300">-20 P</span>
+                    </button>
+                    <button class="btn-davranis bg-negatif-max p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="-25" data-tur="Saygısızlık" data-not="Büyüklere karşı saygısızlık yaptı">
+                        <span>🖕 Saygısızlık (-)</span> <span class="text-xs font-bold bg-rose-500/20 px-2 py-1 rounded text-rose-300">-25 P</span>
+                    </button>
+
+                    <div class="col-span-1 sm:col-span-2 text-xs font-bold text-rose-400 uppercase tracking-wider mt-2 border-b border-white/5 pb-1 category-title">📉 Düzen & Sağlık İhlalleri</div>
+                    <button class="btn-davranis bg-negatif-10 p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="-20" data-tur="Akademik Başarısızlık" data-not="Derslerinde veya sınavlarında bariz ihmal sergiledi">
+                        <span>📉 Akademik Başarısızlık</span> <span class="text-xs font-bold bg-rose-500/20 px-2 py-1 rounded text-rose-300">-20 P</span>
+                    </button>
+                    <button class="btn-davranis bg-negatif-10 p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="-10" data-tur="Kişisel Bakım İhlali" data-not="Özbakım süreçlerini ihmal etti">
+                        <span>🪞 Kişisel Bakım (-)</span> <span class="text-xs font-bold bg-rose-500/20 px-2 py-1 rounded text-rose-300">-10 P</span>
+                    </button>
+                    <button class="btn-davranis bg-negatif-10 p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="-15" data-tur="Kişisel Temizlik İhlali" data-not="Temizlik ve hijyen kurallarını çiğnedi">
+                        <span>🧻 Kişisel Temizlik (-)</span> <span class="text-xs font-bold bg-rose-500/20 px-2 py-1 rounded text-rose-300">-15 P</span>
+                    </button>
+                    <button class="btn-davranis bg-negatif-10 p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="-10" data-tur="Oda Dağınıklığı" data-not="Odasını kirli ve dağınık bıraktı">
+                        <span>🐷 Oda Temizliği (-)</span> <span class="text-xs font-bold bg-rose-500/20 px-2 py-1 rounded text-rose-300">-10 P</span>
+                    </button>
+                    <button class="btn-davranis bg-negatif-10 p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="-10" data-tur="Uyku Düzensizliği" data-not="Uyku saatlerine uymadı, geç yattı">
+                        <span>🦉 Düzenli Uyku (-)</span> <span class="text-xs font-bold bg-rose-500/20 px-2 py-1 rounded text-rose-300">-10 P</span>
+                    </button>
+                </div>
+
+
+                <!-- Olumsuz Davranışlar Alanı -->
+                <div id="areaOlumsuz" class="grid grid-cols-1 sm:grid-cols-2 gap-3 hidden">
+                    
+                    <div class="col-span-1 sm:col-span-2 text-xs font-bold text-rose-400 uppercase tracking-wider mt-1 border-b border-white/5 pb-1 category-title">⚠️ Sorumsuzluk & İhmal</div>
+                    <button class="btn-davranis bg-negatif-5 p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="-10" data-tur="Sorumsuzluk" data-not="Bireysel sorumluluklarını yerine getirmedi, sorumsuz davrandı">
+                        <span>❌ Sorumsuzluk</span> <span class="text-xs font-bold bg-rose-500/20 px-2 py-1 rounded text-rose-300">-10 P</span>
+                    </button>
+                    <button class="btn-davranis bg-negatif-5 p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="-5" data-tur="Cimrilik" data-not="Paylaşım yapmaktan kaçındı, cimrilik sergiledi">
+                        <span>🥀 Cimrilik</span> <span class="text-xs font-bold bg-rose-500/20 px-2 py-1 rounded text-rose-300">-5 P</span>
+                    </button>
+                    <button class="btn-davranis bg-negatif-5 p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="-10" data-tur="Yalan" data-not="Yalan söyledi veya gerçeği saptırarak yanıltıcı beyanda bulundu">
+                        <span>🤥 Yalan / Yanıltma</span> <span class="text-xs font-bold bg-rose-500/20 px-2 py-1 rounded text-rose-300">-10 P</span>
+                    </button>
+                    <button class="btn-davranis bg-negatif-5 p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="-5" data-tur="Akran Nezaketi" data-not="Çevresine veya akranlarına karşı kırıcı/nezaketsiz davrandı">
+                        <span>😤 Akran Nezaketi (-)</span> <span class="text-xs font-bold bg-rose-500/20 px-2 py-1 rounded text-rose-300">-5 P</span>
+                    </button>
+
+                    <div class="col-span-1 sm:col-span-2 text-xs font-bold text-rose-400 uppercase tracking-wider mt-2 border-b border-white/5 pb-1 category-title">🚫 Ağır İhlaller & Kusurlar</div>
+                    <button class="btn-davranis bg-negatif-max p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="-35" data-tur="Mal Zararı" data-not="Ev eşyalarına veya ortak kullanım alanındaki mala zarar verdi">
+                        <span>💥 Ev Malına Zarar</span> <span class="text-xs font-bold bg-rose-500/20 px-2 py-1 rounded text-rose-300">-35 P</span>
+                    </button>
+                    <button class="btn-davranis bg-negatif-max p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="-40" data-tur="Kavga" data-not="Ev halkıyla hırçın tartışmaya girdi, aile huzurunu kaçırdı">
+                        <span>🔥 Huzur Kaçırma / Kavga</span> <span class="text-xs font-bold bg-rose-500/20 px-2 py-1 rounded text-rose-300">-40 P</span>
+                    </button>
+                    <button class="btn-davranis bg-negatif-max p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="-20" data-tur="Zararlı Alışkanlık" data-not="Sigara, alkol veya bunlara özentilik teşkil edecek durum tespit edildi">
+                        <span>🚬 Sigara & Alkol</span> <span class="text-xs font-bold bg-rose-500/20 px-2 py-1 rounded text-rose-300">-20 P</span>
+                    </button>
+                    <button class="btn-davranis bg-negatif-max p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="-40" data-tur="İhanet" data-not="Verilen sırrı veya emaneti suistimal etti, ihanet etti">
+                        <span>🚨 Emanete İhanet</span> <span class="text-xs font-bold bg-rose-500/20 px-2 py-1 rounded text-rose-300">-40 P</span>
+                    </button>
+                    <button class="btn-davranis bg-negatif-max p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="-20" data-tur="Kötü Alışkanlık" data-not="Genel ahlaka veya aile yapısına uymayan kötü alışkanlık sergiledi">
+                        <span>👺 Kötü Alışkanlık</span> <span class="text-xs font-bold bg-rose-500/20 px-2 py-1 rounded text-rose-300">-20 P</span>
+                    </button>
+                    <button class="btn-davranis bg-negatif-max p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="-25" data-tur="Saygısızlık" data-not="Büyüklere karşı üslubunu bozdu, saygısızlık yaptı">
+                        <span>🖕 Saygısızlık (-)</span> <span class="text-xs font-bold bg-rose-500/20 px-2 py-1 rounded text-rose-300">-25 P</span>
+                    </button>
+
+                    <div class="col-span-1 sm:col-span-2 text-xs font-bold text-rose-400 uppercase tracking-wider mt-2 border-b border-white/5 pb-1 category-title">📉 Düzen & Sağlık İhlalleri</div>
+                    <button class="btn-davranis bg-negatif-10 p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="-20" data-tur="Akademik Başarısızlık" data-not="Ders, ödev veya sınav süreçlerini bariz şekilde ihmal etti">
+                        <span>📉 Akademik Başarısızlık</span> <span class="text-xs font-bold bg-rose-500/20 px-2 py-1 rounded text-rose-300">-20 P</span>
+                    </button>
+                    <button class="btn-davranis bg-negatif-10 p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="-10" data-tur="Kişisel Bakım İhlali" data-not="Bireysel özbakım süreçlerini aksattı">
+                        <span>🪞 Kişisel Bakım (-)</span> <span class="text-xs font-bold bg-rose-500/20 px-2 py-1 rounded text-rose-300">-10 P</span>
+                    </button>
+                    <button class="btn-davranis bg-negatif-10 p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="-15" data-tur="Kişisel Temizlik İhlali" data-not="Genel hijyen ve kişisel temizlik kurallarını ihlal etti">
+                        <span>🧻 Kişisel Temizlik (-)</span> <span class="text-xs font-bold bg-rose-500/20 px-2 py-1 rounded text-rose-300">-15 P</span>
+                    </button>
+                    <button class="btn-davranis bg-negatif-10 p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="-10" data-tur="Oda Dağınıklığı" data-not="Kendi odasını veya kişisel alanını aşırı dağınık ve kirli bıraktı">
+                        <span>🐷 Oda Temizliği (-)</span> <span class="text-xs font-bold bg-rose-500/20 px-2 py-1 rounded text-rose-300">-10 P</span>
+                    </button>
+                    <button class="btn-davranis bg-negatif-10 p-3 rounded-xl text-left text-sm flex justify-between items-center" data-puan="-10" data-tur="Uyku Düzensizliği" data-not="Belirlenen uyku saatlerine uymadı, uyarılara rağmen geç yattı">
+                        <span>🦉 Düzenli Uyku (-)</span> <span class="text-xs font-bold bg-rose-500/20 px-2 py-1 rounded text-rose-300">-10 P</span>
+                    </button>
+                </div>
+
+                <!-- Arama kısmı -->
+                <div id="lblNoResult" class="hidden text-center py-8 text-gray-400 italic text-sm">
+                    🔍 Kriterlere uygun davranış tanımı bulunamadı...
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script type="module" src="assets/js/firebase-config.js"></script>
+    <script type="module" src="assets/js/theme-engine.js"></script>
+    <script type="module" src="assets/js/dashboard.js"></script>
+    <div
+      class="fixed bottom-3 left-4 z-40 text-[11px] font-mono tracking-wider opacity-30 hover:opacity-100 transition-opacity duration-200 pointer-events-none select-none text-white"
+    >
+      ADAS version 1.6 <br> powered by MiracOS
+    </div>
+  </body>
+</html>
