@@ -1,159 +1,132 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="tr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-    />
-    <title>MiracOS | System_State_Critical</title>
-    <style>
-      /* Tam Kısıtlama: Seçme, Tıklama, Kaydırma Engellendi */
-      * {
-        user-select: none;
-        -webkit-user-select: none;
-        touch-action: none;
-        cursor: none !important;
-      }
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADAS - Ödeme Paneli</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col items-center py-12 px-4">
 
-      body {
-        background-color: #050505; /* Tam siyah değil, derin bir gri-siyah */
-        color: #a0a0a0;
-        font-family:
-          "Segoe UI", "Roboto", "monospace"; /* Modern ama teknik fontlar */
-        margin: 0;
-        padding: 40px;
-        display: flex;
-        flex-direction: column;
-        height: 100vh;
-        box-sizing: border-box;
-        overflow: hidden;
-      }
-
-      /* Ana Konteyner */
-      .system-container {
-        width: 100%;
-        max-width: 800px;
-        margin: 0 auto;
-      }
-
-      /* MiracOS Kimlik Başlığı */
-      .brand {
-        color: #ffffff;
-        font-weight: 600;
-        font-size: 1.2rem;
-        letter-spacing: 2px;
-        margin-bottom: 5px;
-        border-bottom: 1px solid #1a1a1a;
-        padding-bottom: 10px;
-      }
-
-      .sub-header {
-        font-size: 0.8rem;
-        color: #444;
-        margin-bottom: 40px;
-        text-transform: uppercase;
-      }
-
-      /* Hata Bloğu */
-      .error-block {
-        margin-bottom: 30px;
-      }
-
-      .status-tag {
-        display: inline-block;
-        background-color: #330000;
-        color: #ff3333;
-        padding: 2px 8px;
-        font-size: 0.75rem;
-        font-weight: bold;
-        margin-bottom: 10px;
-      }
-
-      .error-title {
-        color: #eee;
-        font-size: 1.5rem;
-        margin-bottom: 10px;
-      }
-
-      /* Sistem Logları */
-      .logs {
-        font-family: "Courier New", monospace;
-        font-size: 0.85rem;
-        line-height: 1.6;
-        color: #666;
-      }
-
-      .cursor-blink {
-        display: inline-block;
-        width: 8px;
-        height: 15px;
-        background-color: #666;
-        animation: blink 1s infinite;
-        vertical-align: middle;
-        margin-left: 5px;
-      }
-
-      @keyframes blink {
-        0% {
-          opacity: 0;
-        }
-        50% {
-          opacity: 1;
-        }
-        100% {
-          opacity: 0;
-        }
-      }
-
-      /* Mobil Düzenleme */
-      @media (max-width: 768px) {
-        body {
-          padding: 20px;
-          justify-content: flex-start;
-        }
-        .brand {
-          font-size: 1rem;
-        }
-        .error-title {
-          font-size: 1.2rem;
-        }
-        .logs {
-          font-size: 0.75rem;
-        }
-      }
-    </style>
-  </head>
-  <body oncontextmenu="return false;" onkeydown="return false;">
-    <div class="system-container">
-      <div class="brand">MiracOS Core / MirUI 8.5</div>
-      <div class="sub-header">Automated Recovery & Diagnostic System</div>
-
-      <div class="error-block">
-        <div class="status-tag">CORE_HALT</div>
-        <div class="error-title">HTTP_503: SERVICE_UNAVAILABLE</div>
-        <p>
-          Sistem arayüzü yönetici talimatıyla askıya alındı. Veri akışı güvenli
-          modda durduruldu.
-        </p>
-      </div>
-
-      <div class="logs">
-        > [30.04.2026 10:51] Power failure detected (External)<br />
-        > [30.04.2026 10:51] MirUI_Interface_Manager: Dropped<br />
-        > [30.04.2026 10:52] Syncing local databases... Done.<br />
-        > [30.04.2026 10:52] Entering Deep Sleep Mode.<br />
-        > Next check sequence: Sunday, 21:00 GMT+3<br />
-        <span class="cursor-blink"></span>
-      </div>
+    <div class="max-w-6xl w-full text-center mb-10">
+        <h1 class="text-4xl font-extrabold text-indigo-400 mb-2">ADAŞ Aile Planları</h1>
+        <p class="text-slate-400">Ödeme işlemleri simülasyondan ibarettir. Gerçek veri girmeyiniz.</p>
     </div>
 
-    <script>
-      // JS tabanlı ek korumalar
-      document.addEventListener("contextmenu", (e) => e.preventDefault());
-      document.addEventListener("keydown", (e) => {
-        if (e.ctrlKey || e.key === "F12") e.preventDefault();
-      });
-    </script>
-  </body>
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-6xl w-full mb-12">
+        
+        <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 flex flex-col justify-between shadow-xl">
+            <div>
+                <h3 class="text-xl font-bold mb-2">Ücretsiz Plan</h3>
+                <p class="text-3xl font-extrabold text-slate-300 my-4">0 ₺ <span class="text-sm font-normal text-slate-400">/ kalıcı</span></p>
+                <ul class="text-sm text-slate-400 space-y-2 mb-6 text-left">
+                    <li><i class="fa-solid fa-check text-green-500 mr-2"></i> 1 Üye Limiti</li>
+                    <li><i class="fa-solid fa-check text-green-500 mr-2"></i> Temel Analizler</li>
+                </ul>
+            </div>
+            <button disabled class="w-full bg-slate-700 text-slate-400 py-3 rounded-xl font-medium cursor-not-allowed">Mevcut Plan</button>
+        </div>
+
+        <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 flex flex-col justify-between shadow-xl hover:border-indigo-500 transition">
+            <div>
+                <h3 class="text-xl font-bold mb-2">Haftalık Plan</h3>
+                <p class="text-3xl font-extrabold text-indigo-400 my-4">15 ₺ <span class="text-sm font-normal text-slate-400">/ 7 gün</span></p>
+                <ul class="text-sm text-slate-400 space-y-2 mb-6 text-left">
+                    <li><i class="fa-solid fa-check text-green-500 mr-2"></i> 3 Üye Limiti</li>
+                    <li><i class="fa-solid fa-check text-green-500 mr-2"></i> Detaylı Raporlama</li>
+                </ul>
+            </div>
+            <button onclick="selectPlan('haftalik', 15)" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-medium transition cursor-pointer">Seç</button>
+        </div>
+
+        <div class="bg-slate-800 p-6 rounded-2xl border-2 border-indigo-500 relative flex flex-col justify-between shadow-xl transform scale-105">
+            <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-indigo-500 text-white text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider">En Popüler</span>
+            <div>
+                <h3 class="text-xl font-bold mb-2">Aylık Plan</h3>
+                <p class="text-3xl font-extrabold text-indigo-400 my-4">50 ₺ <span class="text-sm font-normal text-slate-400">/ 30 days</span></p>
+                <ul class="text-sm text-slate-400 space-y-2 mb-6 text-left">
+                    <li><i class="fa-solid fa-check text-green-500 mr-2"></i> 6 Üye Limiti</li>
+                    <li><i class="fa-solid fa-check text-green-500 mr-2"></i> Gelişmiş Davranış Grafikleri</li>
+                </ul>
+            </div>
+            <button onclick="selectPlan('aylik', 50)" class="w-full bg-indigo-500 hover:bg-indigo-600 text-white py-3 rounded-xl font-medium transition cursor-pointer">Seç</button>
+        </div>
+
+        <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 flex flex-col justify-between shadow-xl hover:border-indigo-500 transition">
+            <div>
+                <h3 class="text-xl font-bold mb-2">Yıllık Plan</h3>
+                <p class="text-3xl font-extrabold text-indigo-400 my-4">750 ₺ <span class="text-sm font-normal text-slate-400">/ 365 gün</span></p>
+                <ul class="text-sm text-slate-400 space-y-2 mb-6 text-left">
+                    <li><i class="fa-solid fa-check text-green-500 mr-2"></i> Sınırsız Üye Limiti</li>
+                    <li><i class="fa-solid fa-check text-green-500 mr-2"></i> Yapay Zeka Destekli Öneriler</li>
+                    <li><i class="fa-solid fa-star text-yellow-500 mr-2"></i> %20 Avantajlı</li>
+                </ul>
+            </div>
+            <button onclick="selectPlan('yillik', 750)" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-medium transition cursor-pointer">Seç</button>
+        </div>
+    </div>
+
+    <div id="paymentArea" class="hidden max-w-lg w-full bg-slate-800 p-8 rounded-2xl border border-slate-700 shadow-2xl">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold tracking-tight">Güvenli Ödeme Formu</h2>
+            <span id="selectedBadge" class="bg-indigo-950 text-indigo-300 px-3 py-1 rounded-xl text-sm font-semibold border border-indigo-800 shadow-inner"></span>
+        </div>
+
+        <div class="grid grid-cols-3 gap-3 mb-6">
+            <div class="flex flex-col items-center justify-center bg-slate-900 border border-slate-700/60 p-2.5 rounded-xl text-[10px] font-bold text-red-500 shadow-sm transition hover:border-red-500/40">
+                <i class="fa-solid fa-building-columns text-base mb-1"></i>İŞ BANKASI
+            </div>
+            <div class="flex flex-col items-center justify-center bg-slate-900 border border-slate-700/60 p-2.5 rounded-xl text-[10px] font-bold text-orange-400 shadow-sm transition hover:border-orange-400/40">
+                <i class="fa-solid fa-building-columns text-base mb-1"></i>AKBANK
+            </div>
+            <div class="flex flex-col items-center justify-center bg-slate-900 border border-slate-700/60 p-2.5 rounded-xl text-[10px] font-bold text-yellow-500 shadow-sm transition hover:border-yellow-500/40">
+                <i class="fa-solid fa-building-columns text-base mb-1"></i>VAKIFBANK
+            </div>
+        </div>
+
+        <form id="paymentForm" class="space-y-4">
+            <input type="hidden" id="inputPlan" name="secilenPlan">
+
+            <div>
+                <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Aile Adı</label>
+                <input type="text" id="inputFamily" required placeholder="Örn: Yılmaz Ailesi" 
+                       class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:border-indigo-500 transition text-white">
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Kart Üzerindeki İsim</label>
+                <input type="text" required placeholder="Ahmet Yılmaz" 
+                       class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:border-indigo-500 transition text-white">
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Kart Numarası</label>
+                <input type="text" id="cardNumber" required maxlength="19" placeholder="0000 0000 0000 0000" 
+                       class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:border-indigo-500 transition text-white text-center font-mono text-lg">
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Son Kullanma (AA/YY)</label>
+                    <input type="text" id="cardExpiry" required maxlength="5" placeholder="AA/YY" 
+                           class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:border-indigo-500 transition text-white text-center font-mono text-lg">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">CVC</label>
+                    <input type="text" required maxlength="3" placeholder="000" 
+                           class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:border-indigo-500 transition text-white text-center font-mono text-lg">
+                </div>
+            </div>
+
+            <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-emerald-900/40 transition duration-200 mt-4 flex items-center justify-center gap-2 cursor-pointer">
+                <i class="fa-solid fa-shield-halved"></i> Katılım Talebi Gönder
+            </button>
+        </form>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="payment.js"></script>
+</body>
 </html>
+

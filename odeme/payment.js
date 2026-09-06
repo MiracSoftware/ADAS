@@ -103,7 +103,6 @@ document.addEventListener("DOMContentLoaded", () => {
         durum: "beklemede",
       };
 
-      // Anonim/Açık Talep POST URL (DB Rules'da premium_talepleri .write: true olarak tanımlandı)
       const firebaseUrl =
         "https://aile-davranis-analiz-sistemi-default-rtdb.europe-west1.firebasedatabase.app/premium_talepleri.json";
 
@@ -116,7 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (response.ok) {
           alert(
-            "🎉 Ödeme Başarılı!\nTalep sistem yönetimine 'beklemede' olarak iletildi.",
+            "🎉 Talep Gönderildi!\nTalebiniz, sistem yönetim birimine 'beklemede' olarak iletildi.",
           );
           paymentForm.reset();
           if (paymentArea) paymentArea.classList.add("hidden");
