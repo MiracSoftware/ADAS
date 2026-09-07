@@ -13,14 +13,14 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
   </head>
-  <body class="bg-[#0f172a] text-slate-100 min-h-screen font-sans">
+  <body class="bg-[#0f172a] text-slate-100 min-h-screen font-sans admin-shell">
     <!-- Yönetici Doğrulama-->
     <div
       id="authContainer"
       class="fixed inset-0 bg-[#0f172a] z-50 flex items-center justify-center p-4"
     >
       <div
-        class="bg-slate-800 p-8 rounded-2xl border border-slate-700 max-w-sm w-full shadow-2xl text-center"
+        class="admin-surface auth-surface bg-slate-800 p-8 rounded-2xl border border-slate-700 max-w-sm w-full shadow-2xl text-center"
       >
         <div class="text-indigo-400 text-4xl mb-3">
           <i class="fa-solid fa-shield-halved"></i>
@@ -70,16 +70,16 @@
     <!--Yönetim Paneli Dashboard -->
     <div id="panelContainer" class="hidden">
       <header
-        class="bg-slate-800 border-b border-slate-700 px-6 py-4 flex justify-between items-center"
+        class="admin-header bg-slate-800 border-b border-slate-700 px-6 py-4 flex justify-between items-center"
       >
         <div class="flex items-center gap-3">
           <span class="text-indigo-400 text-xl"
             ><i class="fa-solid fa-layout-sidebar"></i
           ></span>
           <h1 class="text-md font-bold tracking-wide">
-            ADAS Yönetim Paneli
+            ADAŞ
             <span class="text-xs text-emerald-400 font-normal"
-              >| Veri İzleme Modu</span
+              >| Yönetim Paneli</span
             >
           </h1>
         </div>
@@ -94,7 +94,7 @@
       <main class="p-6 max-w-7xl mx-auto space-y-6">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div
-            class="lg:col-span-1 bg-slate-800 p-5 rounded-2xl border border-slate-700 shadow-xl flex flex-col h-[320px]"
+            class="admin-card lg:col-span-1 bg-slate-800 p-5 rounded-2xl border border-slate-700 shadow-xl flex flex-col h-[320px]"
           >
             <h2
               class="text-sm font-bold text-amber-400 mb-4 flex items-center gap-2"
@@ -113,7 +113,7 @@
           </div>
 
           <div
-            class="lg:col-span-2 bg-slate-800 p-5 rounded-2xl border border-slate-700 shadow-xl flex flex-col h-[320px]"
+            class="admin-card lg:col-span-2 bg-slate-800 p-5 rounded-2xl border border-slate-700 shadow-xl flex flex-col h-[320px]"
           >
             <div class="flex justify-between items-center mb-4">
               <h2
@@ -154,7 +154,7 @@
           class="hidden grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in"
         >
           <div
-            class="lg:col-span-2 bg-slate-800 p-5 rounded-2xl border border-slate-700 shadow-xl flex flex-col h-[350px]"
+            class="admin-card lg:col-span-2 bg-slate-800 p-5 rounded-2xl border border-slate-700 shadow-xl flex flex-col h-[350px]"
           >
             <div class="flex justify-between items-center mb-4">
               <h3 class="text-sm font-bold text-emerald-400">
@@ -189,7 +189,7 @@
           </div>
 
           <div
-            class="lg:col-span-1 bg-slate-800 p-5 rounded-2xl border border-slate-700 shadow-xl flex flex-col h-[350px]"
+            class="admin-card lg:col-span-1 bg-slate-800 p-5 rounded-2xl border border-slate-700 shadow-xl flex flex-col h-[350px]"
           >
             <h3
               class="text-sm font-bold text-slate-300 mb-4 flex items-center gap-2"
@@ -210,7 +210,7 @@
 
         <div
           id="memberDetailSection"
-          class="hidden bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl animate-fade-in"
+          class="admin-card hidden bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl animate-fade-in"
         >
           <div
             class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-700 pb-4 mb-4"
@@ -313,8 +313,9 @@
       <footer
         class="text-center py-6 text-[11px] text-slate-500 border-t border-slate-800/60 mt-12"
       >
-        ADAS Altyapısı Pedagojik Veri İzleme Protokolü. KVKK mevzuatına
-        uygundur.
+        Aile Davranış Yönetim Sistemi (ADAS) © 2026 | Tüm Hakları Saklıdır.
+        <br>
+        Powered by MiracOS
       </footer>
     </div>
 
@@ -323,7 +324,7 @@
       class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
     >
       <div
-        class="bg-slate-800 border border-slate-700 w-full max-w-md rounded-2xl p-5 shadow-2xl space-y-4"
+        class="admin-modal bg-slate-800 border border-slate-700 w-full max-w-md rounded-2xl p-5 shadow-2xl space-y-4"
       >
         <h3 id="modalTitle" class="text-sm font-bold text-indigo-400">
           Yeni Aile Yapısı Tanımla
@@ -404,7 +405,7 @@
       class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
     >
       <div
-        class="bg-slate-800 border border-slate-700 w-full max-w-sm rounded-2xl p-5 shadow-2xl space-y-4"
+        class="admin-modal bg-slate-800 border border-slate-700 w-full max-w-sm rounded-2xl p-5 shadow-2xl space-y-4"
       >
         <h3 id="memberModalTitle" class="text-sm font-bold text-emerald-400">
           Yeni Birey Ekle

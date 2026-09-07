@@ -5,7 +5,7 @@
  * Karanlık ve aydınlık modlar arasında geçiş yapabilme yeteneği sunar ve kullanıcı deneyimini iyileştirmek için çeşitli görsel efektler içerir. 
  * Ayrıca, form alanları, kartlar ve butonlar gibi UI bileşenlerinin stilini yönetir.
  * ------------------------------------------------------------------------- */
- /*Adas/root/style.css*/
+/*Adas/root/style.css*/
 /* Genel Renk ve Font Yumuşatması */
 body {
   background-color: #0b0f17 !important; /* Derin grafit siyah arka plan */
@@ -131,4 +131,238 @@ select {
 input:focus,
 select:focus {
   border-color: #9ca3af !important;
+}
+
+/* -------------------------------------------------------------------------
+ * ADAS admin visual layer
+ * ------------------------------------------------------------------------- */
+:root {
+  --admin-bg: #080b12;
+  --admin-panel: rgba(18, 25, 38, 0.82);
+  --admin-panel-soft: rgba(7, 11, 19, 0.72);
+  --admin-line: rgba(148, 163, 184, 0.18);
+  --admin-cyan: #67e8f9;
+  --admin-blue: #60a5fa;
+  --admin-green: #34d399;
+  --admin-red: #fb7185;
+  --admin-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --admin-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html {
+  background: var(--admin-bg);
+}
+
+body.admin-shell {
+  background:
+    radial-gradient(
+      circle at 8% -5%,
+      rgba(96, 165, 250, 0.17),
+      transparent 30rem
+    ),
+    radial-gradient(
+      circle at 96% 8%,
+      rgba(52, 211, 153, 0.1),
+      transparent 26rem
+    ),
+    var(--admin-bg) !important;
+  color: #e6edf7 !important;
+}
+
+.admin-shell #authContainer {
+  background: rgba(8, 11, 18, 0.88) !important;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.admin-surface,
+.admin-card,
+.admin-modal {
+  background: linear-gradient(
+    145deg,
+    var(--admin-panel),
+    rgba(12, 17, 28, 0.72)
+  ) !important;
+  border-color: var(--admin-line) !important;
+  box-shadow:
+    0 24px 70px rgba(0, 0, 0, 0.3),
+    inset 0 1px rgba(255, 255, 255, 0.04) !important;
+  backdrop-filter: blur(18px) saturate(145%);
+  -webkit-backdrop-filter: blur(18px) saturate(145%);
+}
+
+.auth-surface {
+  animation: admin-rise 0.7s var(--admin-smooth) both;
+}
+
+.admin-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(8, 11, 18, 0.78) !important;
+  border-color: var(--admin-line) !important;
+  backdrop-filter: blur(22px) saturate(150%);
+  -webkit-backdrop-filter: blur(22px) saturate(150%);
+}
+
+.admin-card {
+  overflow: hidden;
+  animation: admin-rise 0.65s var(--admin-smooth) both;
+  transition:
+    transform 0.4s var(--admin-spring),
+    border-color 0.3s ease,
+    box-shadow 0.4s ease;
+}
+
+.admin-card:nth-child(2) {
+  animation-delay: 0.08s;
+}
+.admin-card:nth-child(3) {
+  animation-delay: 0.16s;
+}
+
+.admin-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(103, 232, 249, 0.32) !important;
+  box-shadow:
+    0 30px 78px rgba(0, 0, 0, 0.34),
+    0 0 28px rgba(96, 165, 250, 0.09) !important;
+}
+
+.admin-shell button {
+  min-height: 2.25rem;
+  transition:
+    transform 0.28s var(--admin-spring),
+    filter 0.2s ease,
+    box-shadow 0.28s ease !important;
+}
+
+.admin-shell button:hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+}
+
+.admin-shell button:active {
+  transform: scale(0.95);
+}
+
+.admin-shell button:focus-visible,
+.admin-shell a:focus-visible,
+.admin-shell input:focus-visible,
+.admin-shell select:focus-visible {
+  outline: 2px solid var(--admin-cyan);
+  outline-offset: 3px;
+}
+
+.admin-shell input,
+.admin-shell select {
+  background: var(--admin-panel-soft) !important;
+  border-color: var(--admin-line) !important;
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s var(--admin-spring) !important;
+}
+
+.admin-shell input:focus,
+.admin-shell select:focus {
+  border-color: var(--admin-blue) !important;
+  box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.14) !important;
+  transform: translateY(-1px);
+}
+
+#familyTableBody tr,
+#memberTableBody tr {
+  transition:
+    background-color 0.25s ease,
+    transform 0.3s var(--admin-spring) !important;
+}
+
+#familyTableBody tr:hover,
+#memberTableBody tr:hover {
+  transform: translateX(3px);
+}
+
+.admin-modal {
+  animation: admin-modal-in 0.35s var(--admin-spring) both;
+}
+
+@keyframes admin-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes admin-modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-shell .admin-header {
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.8rem 1rem !important;
+  }
+
+  .admin-shell .admin-header h1 {
+    font-size: 0.8rem;
+    line-height: 1.35;
+  }
+
+  .admin-shell .admin-header h1 span {
+    display: block;
+    margin-top: 0.15rem;
+  }
+
+  .admin-shell main {
+    padding: 1rem !important;
+  }
+
+  .admin-shell .h-\[320px\] {
+    height: 22rem;
+  }
+  .admin-shell .h-\[350px\] {
+    height: 24rem;
+  }
+  .admin-shell table {
+    min-width: 42rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-shell #authContainer {
+    padding: 0.75rem !important;
+  }
+  .admin-shell .auth-surface {
+    padding: 1.25rem !important;
+  }
+  .admin-shell main {
+    padding: 0.75rem !important;
+  }
+  .admin-shell .h-\[320px\],
+  .admin-shell .h-\[350px\] {
+    height: 20rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-shell *,
+  .admin-shell *::before,
+  .admin-shell *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
