@@ -1,17 +1,41 @@
 import { dbGet } from "./firebase-config.js";
-import { EngineToastGoster, fillBubbleMenu } from "./theme-engine.js";
+import {
+  EngineToastGoster,
+  fillBubbleMenu,
+  updateLabelWithBlur,
+} from "./theme-engine.js";
 
 const loadingArea = document.getElementById("loadingArea");
 const loginForm = document.getElementById("loginForm");
 const cmbFamilies = document.getElementById("cmbFamilies");
 const cmbMembers = document.getElementById("cmbMembers");
 const txtPassword = document.getElementById("txtPassword");
+const btnForgotPass = document.getElementById("btnForgotPass");
 
 const lblCaptchaSoru = document.getElementById("lblCaptchaSoru");
 const txtCaptchaCevap = document.getElementById("txtCaptchaCevap");
 
 let tumAileler = {};
 let mevcutCaptchaCevabi = 0;
+
+function Sansurle(metin) {
+  return String(metin)
+    .split(/(\s+)/)
+    .map((parca) => {
+      if (/\s+/.test(parca)) return parca;
+      if (parca.length < 2) return "*";
+      return `${parca[0]}${"*".repeat(Math.max(1, parca.length - 1))}`;
+    })
+    .join("");
+}
+
+function SifirlamaButonunuGuncelle() {
+  if (!btnForgotPass) return;
+  const aktif = Boolean(cmbFamilies.value && cmbMembers.value);
+  btnForgotPass.disabled = !aktif;
+  btnForgotPass.classList.toggle("opacity-40", !aktif);
+  btnForgotPass.classList.toggle("cursor-not-allowed", !aktif);
+}
 
 function CaptchaUret() {
   const sayi1 = Math.floor(Math.random() * 9) + 1;
@@ -38,7 +62,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         option.textContent = aileAdi;
         cmbFamilies.appendChild(option);
 
-        familyItems.push({ id: aileAdi, name: aileAdi });
+        familyItems.push({ id: aileAdi, name: Sansurle(aileAdi) });
       });
 
       fillBubbleMenu("menuFamilies", familyItems);
@@ -70,8 +94,8 @@ cmbFamilies.addEventListener("change", () => {
   const memberTrigger = document.getElementById("selectMemberTrigger");
   if (memberTrigger) {
     memberTrigger.classList.remove("opacity-50", "pointer-events-none");
-    const span = memberTrigger.querySelector("#lblSelectedMember");
-    if (span) span.innerText = "-- Üye Seçiniz --";
+    const span = memberTrigger.querySelector(".blur-text-layer");
+    if (span) updateLabelWithBlur(span, "-- Üye Seçiniz --");
   }
 
   if (tumAileler[secilenAile] && tumAileler[secilenAile].members) {
@@ -84,7 +108,7 @@ cmbFamilies.addEventListener("change", () => {
       option.textContent = uyeAdi;
       cmbMembers.appendChild(option);
 
-      memberItems.push({ id: uyeAdi, name: uyeAdi });
+      memberItems.push({ id: uyeAdi, name: Sansurle(uyeAdi) });
     });
 
     fillBubbleMenu("menuMembers", memberItems);
@@ -94,7 +118,20 @@ cmbFamilies.addEventListener("change", () => {
       memberTrigger.classList.add("opacity-50", "pointer-events-none");
     }
   }
+  SifirlamaButonunuGuncelle();
 });
+
+cmbMembers.addEventListener("change", SifirlamaButonunuGuncelle);
+
+if (btnForgotPass) {
+  btnForgotPass.addEventListener("click", () => {
+    if (btnForgotPass.disabled || !cmbFamilies.value || !cmbMembers.value)
+      return;
+    sessionStorage.setItem("sifirlamaAile", cmbFamilies.value);
+    sessionStorage.setItem("sifirlamaUye", cmbMembers.value);
+    window.location.href = "sifre-sifirlama.html";
+  });
+}
 
 loginForm.addEventListener("submit", (e) => {
   e.preventDefault();

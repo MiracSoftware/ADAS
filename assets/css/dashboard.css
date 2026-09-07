@@ -1,64 +1,175 @@
-/* Dashboard CSS Dosyası */
-/* Bu CSS dosyası, ADAŞ uygulamasının dashboard sayfası için özel olarak tasarlanmıştır. 
-   Dashboard sayfasında kullanılan kartlar, butonlar ve diğer UI bileşenlerinin stilini yönetir. 
-   Ayrıca, kullanıcıların puan durumlarını görsel olarak ayırt edebilmeleri için olumlu ve olumsuz davranışları temsil eden renk paletlerini içerir. 
-   Bu sayede kullanıcı deneyimi daha sezgisel ve görsel olarak çekici hale gelir. */
-   /*Adas/assets/css/dashboard.css*/
+/* ADAŞ dashboard glass surfaces and score palette */
+.dashboard-glass,
+#puanlaModal > div {
+  background: var(--glass-card) !important;
+  border: 1px solid var(--glass-border);
+  backdrop-filter: var(--blur-power);
+  -webkit-backdrop-filter: var(--blur-power);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
+}
 
-/* Puan Durum Renkleri (Web Arayüzü İçin Dinamik Yapı) */
 .puan-sifir {
-  color: #f59e0b !important;
+  color: var(--accent-orange) !important;
 }
 .puan-pozitif {
-  color: #10b981 !important;
+  color: var(--accent-emerald) !important;
 }
 .puan-negatif {
-  color: #ef4444 !important;
+  color: #ff5f57 !important;
 }
 
-/* Dashboard Puanlama Butonlarının Opaklık ve Blur Tasarımı */
 .btn-davranis {
+  position: relative;
+  overflow: hidden;
   font-weight: 600;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+  transition:
+    transform 0.35s var(--spring-bounce),
+    box-shadow 0.35s ease;
 }
 
-.btn-davranis:hover {
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-  opacity: 0.95;
+.btn-davranis:hover,
+.btn-davranis:focus-visible {
+  transform: translateY(-2px) scale(1.015);
+  box-shadow:
+    0 10px 26px rgba(0, 0, 0, 0.28),
+    0 0 18px var(--glass-glow);
 }
 
-/* Olumlu Davranış Renk Paleti (Saydam Katmanlı) */
 .bg-pozitif-5 {
   background-color: rgba(16, 185, 129, 0.22) !important;
-  color: #34d399 !important;
+  color: #8af0bd !important;
 }
 .bg-pozitif-10 {
   background-color: rgba(5, 150, 105, 0.32) !important;
-  color: #6ee7b7 !important;
-}
-.bg-pozitif-max {
-  background-color: rgba(6, 78, 59, 0.45) !important;
   color: #a7f3d0 !important;
 }
-
-/* Olumsuz Davranış Renk Paleti (Saydam Katmanlı) */
+.bg-pozitif-max {
+  background-color: rgba(6, 78, 59, 0.5) !important;
+  color: #c4ffe2 !important;
+}
 .bg-negatif-5 {
-  background-color: rgba(249, 115, 22, 0.22) !important;
-  color: #fdba74 !important;
+  background-color: rgba(249, 115, 22, 0.24) !important;
+  color: #ffd0a3 !important;
 }
 .bg-negatif-10 {
-  background-color: rgba(239, 68, 68, 0.28) !important;
-  color: #fca5a5 !important;
+  background-color: rgba(239, 68, 68, 0.3) !important;
+  color: #ffc0c0 !important;
 }
 .bg-negatif-max {
-  background-color: rgba(153, 27, 27, 0.45) !important;
-  color: #fecaca !important;
+  background-color: rgba(153, 27, 27, 0.52) !important;
+  color: #ffd2d2 !important;
 }
 
 .modal-backdrop {
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   background-color: rgba(0, 0, 0, 0.65);
+}
+
+.dashboard-log-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.dashboard-combobox {
+  position: relative;
+  min-width: 13rem;
+}
+
+.dashboard-select-trigger {
+  position: relative;
+  z-index: 1001;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-height: 2.5rem;
+  padding: 0.6rem 0.85rem;
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  background: var(--glass-input);
+  color: var(--text-main);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-align: left;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition:
+    transform 0.35s var(--spring-bounce),
+    box-shadow 0.35s ease,
+    border-color 0.25s ease;
+  touch-action: none;
+  user-select: none;
+}
+
+.dashboard-select-trigger:hover,
+.dashboard-select-trigger:focus-visible,
+.dashboard-select-trigger.peek-active,
+.dashboard-select-trigger.pop-active {
+  border-color: var(--accent-orange);
+  box-shadow: 0 0 22px var(--glass-glow);
+  outline: none;
+}
+
+.dashboard-select-trigger.peek-active {
+  transform: scale(1.03);
+}
+.dashboard-select-trigger.pop-active {
+  transform: scale(1.06);
+}
+.dashboard-select-chevron {
+  color: var(--accent-orange);
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.dashboard-select-menu {
+  top: calc(100% + 0.45rem);
+  z-index: 1000;
+  max-height: 13rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  touch-action: none;
+}
+
+.dashboard-select-menu .ios-bubble-item {
+  min-height: 2.35rem;
+  padding: 0.65rem 0.8rem;
+  font-size: 0.8rem;
+}
+
+.dashboard-native-select {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (max-width: 640px) {
+  .dashboard-log-controls {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .dashboard-combobox {
+    min-width: 0;
+    width: 100%;
+  }
+  #mainDashboard {
+    gap: 0.75rem !important;
+  }
+  #mainDashboard > .dashboard-glass {
+    padding: 0.9rem !important;
+  }
+  #puanlaModal > div {
+    max-height: 92dvh;
+    border-radius: 20px;
+  }
 }

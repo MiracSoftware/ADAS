@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="tr" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>ADAŞ | Şifre Sıfırlama</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <link rel="stylesheet" href="assets/css/peekpop.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  </head>
+  <body class="min-h-screen flex items-center justify-center p-4">
+    <div id="peekBackdrop" class="peek-backdrop" aria-hidden="true"></div>
+    <div
+      id="toastContainer"
+      class="fixed top-5 right-5 z-50 space-y-3 pointer-events-none"
+    ></div>
+
+    <main class="w-full max-w-md login-card p-6 md:p-8 relative">
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <p
+            class="text-[10px] font-bold uppercase tracking-widest sub-title-text"
+          >
+          
+          </p>
+          <h1 class="text-2xl font-black text-orange-400">Şifre Sıfırlama</h1>
+        </div>
+        <a href="index.html" class="adas-btn reset-back-link">Geri</a>
+      </div>
+
+      <p class="text-xs label-text mb-4">
+        Giriş ekranında seçtiğiniz üyeyi doğrulamak için soruları yanıtlayın.
+      </p>
+      <form id="resetForm" class="space-y-4">
+        <label
+          class="block text-xs uppercase tracking-wider font-bold label-text"
+          >Ailede kaç üye var?</label
+        >
+        <input
+          id="answerMemberCount"
+          type="number"
+          min="0"
+          step="1"
+          required
+          class="w-full p-3 text-sm"
+        />
+
+        <label
+          class="block text-xs uppercase tracking-wider font-bold label-text"
+          >Kaç kardeşsiniz?</label
+        >
+        <input
+          id="answerSiblingCount"
+          type="number"
+          min="0"
+          step="1"
+          required
+          class="w-full p-3 text-sm"
+        />
+
+        <label
+          class="block text-xs uppercase tracking-wider font-bold label-text"
+          >Anne adı</label
+        >
+        <input
+          id="answerMother"
+          type="text"
+          autocomplete="off"
+          required
+          class="w-full p-3 text-sm"
+        />
+
+        <label
+          class="block text-xs uppercase tracking-wider font-bold label-text"
+          >Baba adı</label
+        >
+        <input
+          id="answerFather"
+          type="text"
+          autocomplete="off"
+          required
+          class="w-full p-3 text-sm"
+        />
+
+        <label
+          class="block text-xs uppercase tracking-wider font-bold label-text"
+          >Yeni şifre</label
+        >
+        <input
+          id="newPassword"
+          type="password"
+          minlength="1"
+          required
+          class="w-full p-3 text-sm"
+        />
+
+        <button
+          type="submit"
+          class="adas-btn w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-3 rounded-2xl text-sm uppercase"
+        >
+          Şifreyi Güncelle
+        </button>
+      </form>
+    </main>
+
+    <script type="module" src="assets/js/firebase-config.js"></script>
+    <script type="module" src="assets/js/theme-engine.js"></script>
+    <script type="module" src="assets/js/peek-pop.js"></script>
+    <script type="module" src="assets/js/password-reset.js"></script>
+  </body>
+</html>

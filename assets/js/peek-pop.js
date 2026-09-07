@@ -20,12 +20,15 @@ export class PeekPopManager {
     if (!trigger) {
       const item = e.target.closest(".ios-bubble-item");
       if (item) {
+        e.preventDefault();
         this.executeItemSelection(item);
       } else if (this.activeMenu && !e.target.closest(".ios-bubble-menu")) {
         this.closeMenu();
       }
       return;
     }
+
+    e.preventDefault();
 
     const menuId = trigger.dataset.targetMenu;
     const menu = document.getElementById(menuId);
@@ -54,11 +57,13 @@ export class PeekPopManager {
 
   handlePointerMove(e) {
     if (!this.isPeeking || !this.activeMenu) return;
+    e.preventDefault();
     this.updateHoveredItem(e.clientX, e.clientY);
   }
 
-  handlePointerUp() {
+  handlePointerUp(e) {
     if (!this.isPeeking) return;
+    e.preventDefault();
 
     if (this.hoveredItem) {
       this.executeItemSelection(this.hoveredItem);
@@ -87,6 +92,7 @@ export class PeekPopManager {
 
       if (this.hoveredItem) {
         this.hoveredItem.classList.add("active-hover");
+        if (navigator.vibrate) navigator.vibrate(12);
       }
     }
   }
@@ -99,7 +105,7 @@ export class PeekPopManager {
       const menu = item.closest(".ios-bubble-menu");
       if (menu) {
         this.activeTrigger = document.querySelector(
-          `[data-target-menu="${menu.id}"]`
+          `[data-target-menu="${menu.id}"]`,
         );
       }
     }

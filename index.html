@@ -13,6 +13,7 @@
     <title>ADAŞ - Aile Davranış Analiz Sistemi</title>
 
     <link rel="stylesheet" href="assets/css/style.css" />
+    <link rel="stylesheet" href="assets/css/peekpop.css" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link
       rel="stylesheet"
@@ -33,6 +34,34 @@
       id="toastContainer"
       class="fixed top-5 right-5 z-50 space-y-3 pointer-events-none"
     ></div>
+    <!-- Video Modal Overlay -->
+    <div
+      id="videoModal"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-300"
+    >
+      <div
+        class="relative w-full max-w-lg p-4 mx-4 bg-slate-900 border border-white/10 rounded-2xl shadow-2xl"
+      >
+        <button
+          type="button"
+          id="btnCloseVideo"
+          class="absolute -top-3 -right-3 w-8 h-8 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-full flex items-center justify-center cursor-pointer shadow-lg z-10"
+        >
+          ✕
+        </button>
+        <div class="aspect-video w-full overflow-hidden rounded-xl bg-black">
+          <video
+            id="forgotPassVideo"
+            class="w-full h-full object-cover"
+            controls
+            playsinline
+          >
+            <source src="assets/videos/help.mp4" type="video/mp4" />
+            Tarayıcınız video oynatmayı desteklemiyor.
+          </video>
+        </div>
+      </div>
+    </div>
 
     <!-- Giriş Kartı -->
     <div class="w-full max-w-md login-card p-6 md:p-8 relative">
@@ -41,7 +70,6 @@
         <span
           class="text-[10px] font-bold uppercase tracking-widest text-slate-400 sub-title-text"
         >
-          ADAŞ v2026
         </span>
         <div class="flex items-center gap-2 z-10">
           <button
@@ -154,9 +182,10 @@
               id="btnForgotPass"
               class="text-xs text-orange-400 hover:text-orange-300 font-semibold cursor-pointer transition"
             >
-              Şifremi Unuttum?
+              Şifrenizi mi unuttunuz?
             </button>
           </div>
+
           <div class="relative">
             <input
               type="password"
@@ -164,6 +193,15 @@
               placeholder="••••••••"
               class="w-full p-3.5 text-sm font-mono tracking-widest focus:outline-none animated-char-input"
             />
+          </div>
+
+          <!-- Tıklanınca Açılan İpucu Rozeti/Metni -->
+          <div
+            id="hintForgotPass"
+            class="hidden transition-all duration-300 flex items-center gap-1.5 text-[11px] font-medium text-amber-400/90 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-lg mt-1"
+          >
+            <i class="fa-solid fa-circle-info text-xs"></i>
+            <span>Lütfen önce aile grubunuzu ve üyeyi seçin.</span>
           </div>
         </div>
 
@@ -207,5 +245,27 @@
     <script type="module" src="assets/js/theme-engine.js"></script>
     <script type="module" src="assets/js/peek-pop.js"></script>
     <script type="module" src="assets/js/auth.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const btnForgotPass = document.getElementById("btnForgotPass");
+        const hintForgotPass = document.getElementById("hintForgotPass");
+        const cmbFamilies = document.getElementById("cmbFamilies");
+        const cmbMembers = document.getElementById("cmbMembers");
+
+        btnForgotPass?.addEventListener("click", () => {
+          const familySelected = cmbFamilies && cmbFamilies.value !== "";
+          const memberSelected = cmbMembers && cmbMembers.value !== "";
+
+          if (!familySelected || !memberSelected) {
+            hintForgotPass?.classList.remove("hidden");
+            setTimeout(() => {
+              hintForgotPass?.classList.add("hidden");
+            }, 8000);
+          } else {
+            hintForgotPass?.classList.add("hidden");
+          }
+        });
+      });
+    </script>
   </body>
 </html>

@@ -55,6 +55,31 @@ body {
     color 0.4s var(--smooth-out);
 }
 
+button,
+.reset-back-link {
+  transition:
+    transform 0.28s var(--spring-bounce),
+    box-shadow 0.28s ease,
+    filter 0.2s ease;
+}
+
+button:hover,
+.reset-back-link:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px) scale(1.02);
+}
+
+button:active,
+.reset-back-link:active {
+  transform: scale(0.96);
+}
+
+button:focus-visible,
+.reset-back-link:focus-visible {
+  outline: 2px solid var(--accent-orange);
+  outline-offset: 3px;
+}
+
 .login-card {
   background: var(--glass-card) !important;
   backdrop-filter: var(--blur-power) !important;
@@ -162,4 +187,94 @@ input:focus {
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
   box-shadow: none !important;
+}
+
+@media (max-width: 640px) {
+  .space-y-1 > :not([hidden]) ~ :not([hidden]),
+  .space-y-2 > :not([hidden]) ~ :not([hidden]),
+  .space-y-3 > :not([hidden]) ~ :not([hidden]),
+  .space-y-4 > :not([hidden]) ~ :not([hidden]),
+  .space-y-5 > :not([hidden]) ~ :not([hidden]),
+  .space-y-6 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 0.25rem !important;
+  }
+
+  body {
+    min-height: 100dvh;
+    padding: 0.5rem !important;
+  }
+  .glass-card,
+  .login-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0.75rem !important;
+    border-radius: 20px !important;
+  }
+  .login-card .mb-8 {
+    margin-bottom: 0.5rem !important;
+  }
+  .login-card .py-10 {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+  .login-card input,
+  .login-card select,
+  .login-card .custom-select-trigger {
+    min-height: 2.25rem;
+    height: 2.25rem;
+    padding: 0.45rem 0.75rem !important;
+    border-radius: 12px !important;
+  }
+  .login-card .captcha-box {
+    padding: 0.5rem !important;
+    gap: 0.25rem !important;
+  }
+  .login-card .captcha-box input,
+  .login-card .captcha-box #lblCaptchaSoru {
+    min-height: 2.25rem;
+    height: 2.25rem;
+    padding-top: 0.35rem !important;
+    padding-bottom: 0.35rem !important;
+  }
+  .login-card form > button[type="submit"] {
+    min-height: 2.75rem;
+    height: 2.75rem;
+    margin-top: 0.35rem !important;
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+}
+
+#btnTogglePerformance,
+#btnToggleTheme,
+#btnPerfToggle,
+#btnThemeToggle {
+  position: relative;
+  overflow: hidden;
+  background: var(--glass-card) !important;
+  backdrop-filter: var(--blur-power);
+  -webkit-backdrop-filter: var(--blur-power);
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 999px !important;
+  transition:
+    transform 0.35s var(--spring-bounce),
+    box-shadow 0.35s var(--spring-bounce),
+    border-color 0.25s ease;
+}
+
+#btnTogglePerformance:hover,
+#btnToggleTheme:hover,
+#btnPerfToggle:hover,
+#btnThemeToggle:hover {
+  transform: scale(1.04);
+  border-color: var(--accent-orange) !important;
+  box-shadow: 0 0 24px var(--glass-glow);
+}
+
+#btnTogglePerformance:active,
+#btnToggleTheme:active,
+#btnPerfToggle:active,
+#btnThemeToggle:active {
+  transform: scale(0.96);
 }
